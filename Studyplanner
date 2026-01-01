@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner – BS Data Science</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #1d4ed8;
+            --accent-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e40af;
+            --data-green: #10b981;
+            --data-purple: #8b5cf6;
+            --data-orange: #f97316;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-blue: #3b82f6;
+            --secondary-blue: #2563eb;
+            --accent-blue: #60a5fa;
+            --light-blue: #1e3a8a;
+            --dark-blue: #1e40af;
+            --data-green: #34d399;
+            --data-purple: #a78bfa;
+            --data-orange: #fb923c;
+            --light-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-dark: #f1f5f9;
+            --text-light: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            transition: var(--transition);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            border-radius: 34px;
+            transition: .4s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--dark-blue);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 90px;
+            z-index: 99;
+        }
+
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 1px;
+            background: var(--border-color);
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-blue);
+            background: var(--card-bg);
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card .stat-subtext {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Main Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-blue);
+        }
+
+        /* Daily Plans */
+        .plans-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input,
+        .search-box select {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text-dark);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .view-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .view-filter {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .view-filter:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .view-filter.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* Daily Plan Cards */
+        .daily-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .daily-plans-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .plan-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .plan-card.holiday {
+            border-left: 4px solid var(--data-orange);
+        }
+
+        .plan-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--light-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .plan-date {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .plan-day {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .plan-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .holiday-badge {
+            background: var(--data-orange);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .completion-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .completion-check input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .completion-check label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .plan-content {
+            padding: 1.5rem;
+        }
+
+        .subject-card {
+            background: var(--light-bg);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid;
+        }
+
+        .subject-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .subject-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subject-time {
+            background: var(--card-bg);
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .topic-guide {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .topic-guide p {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .topic-guide .study-time {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .plan-notes {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .notes-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: var(--transition);
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .print-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .plan-card:hover .print-btn {
+            opacity: 1;
+        }
+
+        .print-btn:hover {
+            background: var(--secondary-blue);
+            transform: scale(1.1);
+        }
+
+        /* Weekly Timetable */
+        .week-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .date-picker {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .date-picker input {
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text-dark);
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .timetable-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .timetable {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+        }
+
+        .timetable th {
+            background: var(--light-blue);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .timetable td {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .timetable-day {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .timetable-holiday {
+            text-align: center;
+            color: var(--data-orange);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .timetable-subject {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .timetable-subject:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        /* Roadmap Ladder */
+        .roadmap-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .roadmap-container::before {
+            content: '';
+            position: absolute;
+            left: 60px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--data-purple));
+            z-index: 1;
+        }
+
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 100px;
+            min-height: 120px;
+        }
+
+        .roadmap-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: 57px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-light);
+            z-index: 2;
+            border: 3px solid var(--card-bg);
+        }
+
+        .roadmap-item.completed::before {
+            background: var(--data-green);
+        }
+
+        .roadmap-item.in-progress::before {
+            background: var(--data-orange);
+        }
+
+        .roadmap-item.current::before {
+            background: var(--primary-blue);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        .semester-badge {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .roadmap-content {
+            background: var(--light-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .roadmap-content:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .semester-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .semester-subjects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subject-tag {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-item {
+            background: var(--card-bg);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--data-green);
+            font-size: 0.9rem;
+        }
+
+        .projects-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .project-item i {
+            color: var(--data-purple);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .header, .main-nav, .stats-container, .section-header .btn,
+            .print-btn, .completion-check, .notes-textarea, footer {
+                display: none !important;
+            }
+            
+            .content-section {
+                display: block !important;
+                break-inside: avoid;
+            }
+            
+            .plan-card, .roadmap-content, .timetable-container {
+                break-inside: avoid;
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+            
+            .container {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--secondary-blue);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                justify-content: flex-start;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .plans-controls, .week-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .roadmap-item {
+                padding-left: 80px;
+            }
+            
+            .roadmap-container::before {
+                left: 40px;
+            }
+            
+            .roadmap-item::before {
+                left: 37px;
+            }
+            
+            .semester-badge {
+                position: relative;
+                margin-bottom: 1rem;
+                left: auto;
+                top: auto;
+            }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--text-dark);
+            color: var(--light-bg);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Smart Study Planner</h1>
+                        <p>BS Data Science | 10 Jan - 10 Mar</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="theme-toggle">
+                        <i class="fas fa-sun"></i>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <button class="btn" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="daily">
+                    <i class="fas fa-calendar-day"></i> Daily Plans
+                </button>
+                <button class="nav-tab" data-tab="weekly">
+                    <i class="fas fa-calendar-week"></i> Weekly Timetable
+                </button>
+                <button class="nav-tab" data-tab="roadmap">
+                    <i class="fas fa-project-diagram"></i> Semester Roadmap
+                </button>
+                <button class="nav-tab" data-tab="progress">
+                    <i class="fas fa-chart-line"></i> Progress Tracking
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stats Overview -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Study Days</h3>
+                <div class="stat-value" id="totalDays">60</div>
+                <div class="stat-subtext">10 Jan - 10 Mar</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-fire"></i>
+                <h3>Current Streak</h3>
+                <div class="stat-value" id="currentStreak">0</div>
+                <div class="stat-subtext">Days in a row</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-percentage"></i>
+                <h3>Completion</h3>
+                <div class="stat-value" id="completionRate">0%</div>
+                <div class="stat-subtext">Study days completed</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-book-open"></i>
+                <h3>Next Subject</h3>
+                <div class="stat-value" id="nextSubject">C++</div>
+                <div class="stat-subtext">Tomorrow's focus</div>
+            </div>
+        </div>
+
+        <!-- Daily Plans Section -->
+        <section id="daily" class="content-section active">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Daily Study Plans
+                </h2>
+                <div class="actions">
+                    <button class="btn btn-outline" onclick="printSection('daily')">
+                        <i class="fas fa-print"></i> Print Daily Plans
+                    </button>
+                </div>
+            </div>
+
+            <div class="plans-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search by date (e.g., 25 Jan) or topic...">
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-book"></i>
+                    <select id="subjectFilter">
+                        <option value="">All Subjects</option>
+                        <option value="C++">C++ Programming</option>
+                        <option value="English">English</option>
+                        <option value="Statistics">Statistics</option>
+                        <option value="Discrete">Discrete Math</option>
+                        <option value="Linear">Linear Algebra</option>
+                    </select>
+                </div>
+                <div class="view-filters">
+                    <span class="view-filter active" data-view="all">All Days</span>
+                    <span class="view-filter" data-view="upcoming">Upcoming</span>
+                    <span class="view-filter" data-view="completed">Completed</span>
+                    <span class="view-filter" data-view="holidays">Holidays</span>
+                </div>
+            </div>
+
+            <div id="dailyPlansContainer" class="daily-plans-grid">
+                <!-- Daily plans will be generated here -->
+            </div>
+        </section>
+
+        <!-- Weekly Timetable Section -->
+        <section id="weekly" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-week"></i>
+                    Weekly Timetable Generator
+                </h2>
+                <button class="btn" onclick="printSection('weekly')">
+                    <i class="fas fa-print"></i> Print Timetable
+                </button>
+            </div>
+
+            <div class="week-controls">
+                <div class="date-picker">
+                    <label for="weekStart">Select Start Date:</label>
+                    <input type="date" id="weekStart" value="2025-01-10">
+                    <button class="btn" onclick="generateWeeklyTimetable()">
+                        <i class="fas fa-sync"></i> Generate Week
+                    </button>
+                </div>
+            </div>
+
+            <div class="timetable-container">
+                <table class="timetable" id="weeklyTimetable">
+                    <!-- Weekly timetable will be generated here -->
+                </table>
+            </div>
+        </section>
+
+        <!-- Roadmap Section -->
+        <section id="roadmap" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-road"></i>
+                    BS Data Science Roadmap (Semester 1-8)
+                </h2>
+                <button class="btn" onclick="printSection('roadmap')">
+                    <i class="fas fa-print"></i> Print Roadmap
+                </button>
+            </div>
+
+            <div class="roadmap-container" id="roadmapLadder">
+                <!-- Roadmap will be generated here -->
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section id="progress" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Progress Analytics
+                </h2>
+                <button class="btn" onclick="printSection('progress')">
+                    <i class="fas fa-print"></i> Print Progress
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Completed Topics</h3>
+                    <div class="stat-value" id="completedTopics">0</div>
+                    <div class="stat-subtext">Out of 260 total</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Study Hours</h3>
+                    <div class="stat-value" id="studyHours">0</div>
+                    <div class="stat-subtext">Total hours studied</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Streak Record</h3>
+                    <div class="stat-value" id="bestStreak">0</div>
+                    <div class="stat-subtext">Best consecutive days</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar"></i>
+                    <h3>Days Remaining</h3>
+                    <div class="stat-value" id="daysRemaining">60</div>
+                    <div class="stat-subtext">Until 10 March</div>
+                </div>
+            </div>
+
+            <div class="timetable-container" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Progress by Subject</h3>
+                <div id="subjectProgress">
+                    <!-- Progress bars will be generated here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Smart Study Planner for BS Data Science Students</p>
+            <p>All study plans are auto-generated based on standard curriculum</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link" onclick="window.print()">Print All Content</a>
+                <a href="#" class="footer-link" onclick="resetProgress()">Reset Progress</a>
+                <a href="#" class="footer-link" onclick="exportData()">Export Data</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // DATA MODELS AND CONSTANTS
+        // ============================================
+
+        const subjects = {
+            'C++ Programming': {
+                color: '#f97316',
+                icon: 'fas fa-code',
+                topics: [
+                    {
+                        name: 'Variables and Data Types',
+                        guide: 'Learn about int, float, char, and bool. Practice declaring variables and understanding memory allocation.',
+                        time: '1.5 hours'
+                    },
+                    {
+                        name: 'Input/Output Operations',
+                        guide: 'Master cin and cout for user interaction. Learn formatting and basic stream operations.',
+                        time: '1 hour'
+                    },
+                    {
+                        name: 'Conditional Statements',
+                        guide: 'Understand if, else if, else, and switch statements. Practice with real-world decision scenarios.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Loops',
+                        guide: 'Learn for, while, and do-while loops. Practice iteration patterns and loop control.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Functions',
+                        guide: 'Create reusable code blocks with functions. Learn about parameters, return types, and scope.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Arrays',
+                        guide: 'Work with single and multi-dimensional arrays. Practice array traversal and manipulation.',
+                        time: '2 hours'
+                    }
+                ]
+            },
+            'English': {
+                color: '#10b981',
+                icon: 'fas fa-language',
+                topics: [
+                    {
+                        name: 'Academic Vocabulary',
+                        guide: 'Build technical vocabulary for data science. Learn 20 new academic words each session.',
+                        time: '1 hour'
+                    },
+                    {
+                        name: 'Grammar Review',
+                        guide: 'Focus on tenses, articles, and sentence structures commonly used in technical writing.',
+                        time: '1 hour'
+                    },
+                    {
+                        name: 'Technical Writing',
+                        guide: 'Practice writing clear explanations of algorithms and data processes.',
+                        time: '1.5 hours'
+                    },
+                    {
+                        name: 'Presentation Skills',
+                        guide: 'Learn to present technical concepts clearly using structured narratives.',
+                        time: '1.5 hours'
+                    },
+                    {
+                        name: 'Research Paper Reading',
+                        guide: 'Develop strategies for quickly understanding academic papers and extracting key information.',
+                        time: '1 hour'
+                    }
+                ]
+            },
+            'Statistics': {
+                color: '#8b5cf6',
+                icon: 'fas fa-chart-bar',
+                topics: [
+                    {
+                        name: 'Descriptive Statistics',
+                        guide: 'Calculate mean, median, mode, range, variance, and standard deviation for datasets.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Probability Basics',
+                        guide: 'Understand probability rules, conditional probability, and Bayes theorem.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Distributions',
+                        guide: 'Study normal, binomial, and Poisson distributions. Learn when to apply each.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Hypothesis Testing',
+                        guide: 'Learn t-tests, chi-square tests, and p-values for making data-driven decisions.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Correlation & Regression',
+                        guide: 'Calculate correlation coefficients and build simple linear regression models.',
+                        time: '3 hours'
+                    }
+                ]
+            },
+            'Discrete Mathematics': {
+                color: '#ef4444',
+                icon: 'fas fa-project-diagram',
+                topics: [
+                    {
+                        name: 'Sets & Relations',
+                        guide: 'Understand set operations, relations, functions, and their properties.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Logic & Proofs',
+                        guide: 'Work with propositions, truth tables, logical equivalences, and basic proof techniques.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Counting Principles',
+                        guide: 'Learn permutations, combinations, and the binomial theorem with practical examples.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Graph Theory Basics',
+                        guide: 'Study vertices, edges, paths, cycles, and basic graph algorithms.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Boolean Algebra',
+                        guide: 'Understand logic gates, Boolean expressions, and simplification techniques.',
+                        time: '2 hours'
+                    }
+                ]
+            },
+            'Linear Algebra': {
+                color: '#0ea5e9',
+                icon: 'fas fa-vector-square',
+                topics: [
+                    {
+                        name: 'Matrix Operations',
+                        guide: 'Master matrix addition, multiplication, transpose, and properties of matrices.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Systems of Equations',
+                        guide: 'Solve linear systems using Gaussian elimination and matrix methods.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Vector Spaces',
+                        guide: 'Understand vector spaces, subspaces, linear independence, and basis.',
+                        time: '2.5 hours'
+                    },
+                    {
+                        name: 'Determinants & Inverses',
+                        guide: 'Calculate determinants and find matrix inverses using various methods.',
+                        time: '2 hours'
+                    },
+                    {
+                        name: 'Eigenvalues & Eigenvectors',
+                        guide: 'Compute eigenvalues and eigenvectors, understanding their geometric interpretation.',
+                        time: '3 hours'
+                    }
+                ]
+            }
+        };
+
+        // Time slots for study sessions
+        const timeSlots = [
+            '09:00 - 10:30',
+            '11:00 - 12:30',
+            '14:00 - 15:30',
+            '16:00 - 17:30',
+            '19:00 - 20:30'
+        ];
+
+        // Semester roadmap data
+        const roadmapData = [
+            {
+                semester: 1,
+                status: 'completed',
+                subjects: ['C++ Programming', 'English', 'ICT Basics', 'Calculus'],
+                skills: [
+                    'Variables, data types, control structures',
+                    'Basic algorithms and problem solving',
+                    'Academic writing and communication',
+                    'Limits, derivatives, integration basics'
+                ],
+                projects: [
+                    'Simple calculator program',
+                    'Student grade management system',
+                    'Technical documentation writing',
+                    'Math function plotter'
+                ]
+            },
+            {
+                semester: 2,
+                status: 'completed',
+                subjects: ['OOP in C++', 'Discrete Mathematics', 'Statistics I', 'Linear Algebra'],
+                skills: [
+                    'Classes, objects, inheritance, polymorphism',
+                    'Logic, sets, relations, functions',
+                    'Descriptive statistics, probability distributions',
+                    'Matrix operations, systems of equations'
+                ],
+                projects: [
+                    'Library management system',
+                    'Logic circuit simulator',
+                    'Statistical analysis of datasets',
+                    'Linear equation solver'
+                ]
+            },
+            {
+                semester: 3,
+                status: 'in-progress',
+                subjects: ['Data Structures', 'Database Systems', 'Probability & Statistics II', 'Numerical Methods'],
+                skills: [
+                    'Stacks, queues, linked lists, trees',
+                    'SQL queries, normalization, ER diagrams',
+                    'Hypothesis testing, regression analysis',
+                    'Numerical integration, root finding'
+                ],
+                projects: [
+                    'Expression evaluator using stacks',
+                    'E-commerce database design',
+                    'Statistical inference project',
+                    'Equation solver using numerical methods'
+                ]
+            },
+            {
+                semester: 4,
+                status: 'in-progress',
+                subjects: ['Python for DS', 'Data Visualization', 'Data Cleaning', 'Web Technologies'],
+                skills: [
+                    'Pandas, NumPy, basic Python programming',
+                    'Matplotlib, Seaborn, plot customization',
+                    'Handling missing data, outlier detection',
+                    'HTML, CSS, JavaScript basics'
+                ],
+                projects: [
+                    'Data analysis of COVID-19 dataset',
+                    'Interactive dashboard creation',
+                    'Data cleaning pipeline',
+                    'Personal portfolio website'
+                ]
+            },
+            {
+                semester: 5,
+                status: 'upcoming',
+                subjects: ['Machine Learning I', 'Big Data Basics', 'Data Mining', 'Cloud Computing'],
+                skills: [
+                    'Linear regression, logistic regression',
+                    'Hadoop, Spark basics, MapReduce',
+                    'Clustering, association rule mining',
+                    'AWS/Azure basics, storage services'
+                ],
+                projects: [
+                    'House price prediction model',
+                    'Word count using MapReduce',
+                    'Customer segmentation analysis',
+                    'Cloud deployment of web app'
+                ]
+            },
+            {
+                semester: 6,
+                status: 'upcoming',
+                subjects: ['Machine Learning II', 'Deep Learning Basics', 'NLP', 'Time Series'],
+                skills: [
+                    'Decision trees, SVM, ensemble methods',
+                    'Neural networks, backpropagation',
+                    'Text preprocessing, sentiment analysis',
+                    'ARIMA, forecasting techniques'
+                ],
+                projects: [
+                    'Image classifier using CNN',
+                    'Spam detection system',
+                    'Stock price prediction',
+                    'News sentiment analyzer'
+                ]
+            },
+            {
+                semester: 7,
+                status: 'upcoming',
+                subjects: ['Advanced DL', 'Computer Vision', 'Recommender Systems', 'Model Deployment'],
+                skills: [
+                    'Advanced neural architectures',
+                    'Image processing, object detection',
+                    'Collaborative filtering, content-based',
+                    'Docker, Flask/FastAPI, model serving'
+                ],
+                projects: [
+                    'Object detection system',
+                    'Movie recommendation engine',
+                    'Model deployment on cloud',
+                    'Real-time prediction API'
+                ]
+            },
+            {
+                semester: 8,
+                status: 'upcoming',
+                subjects: ['Capstone Project', 'Industry Training', 'Advanced Topics', 'Research Methods'],
+                skills: [
+                    'End-to-end project development',
+                    'Industry best practices',
+                    'Current research trends',
+                    'Paper writing, presentation skills'
+                ],
+                projects: [
+                    'Comprehensive data science project',
+                    'Industry internship project',
+                    'Research paper implementation',
+                    'Thesis/dissertation work'
+                ]
+            }
+        ];
+
+        // ============================================
+        // APPLICATION STATE AND UTILITIES
+        // ============================================
+
+        const appState = {
+            dailyPlans: [],
+            completedDays: JSON.parse(localStorage.getItem('completedDays')) || {},
+            dayNotes: JSON.parse(localStorage.getItem('dayNotes')) || {},
+            currentStreak: parseInt(localStorage.getItem('currentStreak')) || 0,
+            bestStreak: parseInt(localStorage.getItem('bestStreak')) || 0,
+            lastStudyDate: localStorage.getItem('lastStudyDate') || null,
+            completedTopics: JSON.parse(localStorage.getItem('completedTopics')) || {},
+            viewFilter: 'all',
+            currentSemester: 3
+        };
+
+        // Date utilities
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'long',
+                weekday: 'long'
+            });
+        }
+
+        function formatDateForInput(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function getDayName(date) {
+            return date.toLocaleDateString('en-US', { weekday: 'long' });
+        }
+
+        function generateDailyPlan(date) {
+            const dayName = getDayName(date);
+            const isSunday = dayName === 'Sunday';
+            
+            if (isSunday) {
+                return {
+                    date: new Date(date),
+                    formattedDate: formatDate(date),
+                    dayName: dayName,
+                    isHoliday: true,
+                    subjects: []
+                };
+            }
+            
+            // Get two subjects for the day (ensuring variety)
+            const subjectList = Object.keys(subjects);
+            const dayIndex = Math.floor((date - new Date('2025-01-10')) / (1000 * 60 * 60 * 24));
+            const subjectIndex1 = dayIndex % subjectList.length;
+            const subjectIndex2 = (dayIndex + 2) % subjectList.length;
+            
+            const selectedSubjects = [
+                subjectList[subjectIndex1],
+                subjectList[subjectIndex2]
+            ];
+            
+            // Generate plan with topics
+            const planSubjects = selectedSubjects.map((subject, index) => {
+                const subjectData = subjects[subject];
+                const topicIndex = Math.floor(dayIndex / 7) % subjectData.topics.length;
+                
+                return {
+                    name: subject,
+                    colorClass: subject.toLowerCase().replace(/\s+/g, '-'),
+                    time: timeSlots[index % timeSlots.length],
+                    topic: subjectData.topics[topicIndex],
+                    icon: subjectData.icon
+                };
+            });
+            
+            return {
+                date: new Date(date),
+                formattedDate: formatDate(date),
+                dayName: dayName,
+                isHoliday: false,
+                subjects: planSubjects
+            };
+        }
+
+        function generateAllPlans() {
+            const plans = [];
+            const currentDate = new Date('2025-01-10');
+            const endDate = new Date('2025-03-10');
+            
+            while (currentDate <= endDate) {
+                plans.push(generateDailyPlan(new Date(currentDate)));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            return plans;
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+
+        function renderDailyPlans() {
+            const container = document.getElementById('dailyPlansContainer');
+            if (!container) return;
+            
+            let filteredPlans = [...appState.dailyPlans];
+            
+            // Apply filters
+            if (appState.viewFilter === 'upcoming') {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                filteredPlans = filteredPlans.filter(plan => 
+                    plan.date >= today && !plan.isHoliday
+                );
+            } else if (appState.viewFilter === 'completed') {
+                filteredPlans = filteredPlans.filter(plan => 
+                    appState.completedDays[formatDateForInput(plan.date)]
+                );
+            } else if (appState.viewFilter === 'holidays') {
+                filteredPlans = filteredPlans.filter(plan => plan.isHoliday);
+            }
+            
+            // Apply search filter
+            const searchInput = document.getElementById('searchInput');
+            const subjectFilter = document.getElementById('subjectFilter');
+            
+            if (searchInput && searchInput.value) {
+                const searchTerm = searchInput.value.toLowerCase();
+                filteredPlans = filteredPlans.filter(plan => 
+                    plan.formattedDate.toLowerCase().includes(searchTerm) ||
+                    plan.subjects.some(subject => 
+                        subject.name.toLowerCase().includes(searchTerm) ||
+                        subject.topic.name.toLowerCase().includes(searchTerm)
+                    )
+                );
+            }
+            
+            if (subjectFilter && subjectFilter.value) {
+                filteredPlans = filteredPlans.filter(plan =>
+                    plan.subjects.some(subject => 
+                        subject.name.includes(subjectFilter.value)
+                    )
+                );
+            }
+            
+            // Render plans
+            container.innerHTML = filteredPlans.map(plan => `
+                <div class="plan-card ${plan.isHoliday ? 'holiday' : ''}">
+                    <button class="print-btn" onclick="printSinglePlan('${formatDateForInput(plan.date)}')">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    
+                    <div class="plan-header">
+                        <div>
+                            <div class="plan-date">${plan.formattedDate}</div>
+                            <div class="plan-day">${plan.dayName}</div>
+                        </div>
+                        <div class="plan-status">
+                            ${plan.isHoliday ? 
+                                '<span class="holiday-badge"><i class="fas fa-umbrella-beach"></i> Holiday</span>' : 
+                                `<div class="completion-check">
+                                    <input type="checkbox" id="completed-${formatDateForInput(plan.date)}" 
+                                           ${appState.completedDays[formatDateForInput(plan.date)] ? 'checked' : ''}
+                                           onchange="toggleDayCompletion('${formatDateForInput(plan.date)}', this.checked)">
+                                    <label for="completed-${formatDateForInput(plan.date)}">Completed</label>
+                                </div>`
+                            }
+                        </div>
+                    </div>
+                    
+                    ${plan.isHoliday ? `
+                        <div class="plan-content">
+                            <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                                <i class="fas fa-umbrella-beach" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <h3>Enjoy Your Holiday!</h3>
+                                <p>Take a break and recharge for the week ahead.</p>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="plan-content">
+                            ${plan.subjects.map(subject => `
+                                <div class="subject-card" style="border-left-color: ${subjects[subject.name].color}">
+                                    <div class="subject-header">
+                                        <div class="subject-title">
+                                            <i class="${subject.icon}"></i>
+                                            ${subject.name}
+                                        </div>
+                                        <div class="subject-time">
+                                            <i class="fas fa-clock"></i> ${subject.time}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="topic-guide">
+                                        <h4>${subject.topic.name}</h4>
+                                        <p>${subject.topic.guide}</p>
+                                        <span class="study-time">
+                                            <i class="fas fa-hourglass-half"></i> Estimated: ${subject.topic.time}
+                                        </span>
+                                    </div>
+                                    
+                                    <div style="margin-top: 0.75rem;">
+                                        <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" 
+                                                onclick="markTopicComplete('${formatDateForInput(plan.date)}', '${subject.name}', '${subject.topic.name}')">
+                                            <i class="fas fa-check"></i> Mark Topic Complete
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            
+                            <div class="plan-notes">
+                                <textarea class="notes-textarea" 
+                                          placeholder="Add notes for today's study session..."
+                                          onchange="saveDayNotes('${formatDateForInput(plan.date)}', this.value)">${appState.dayNotes[formatDateForInput(plan.date)] || ''}</textarea>
+                            </div>
+                        </div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function renderWeeklyTimetable(startDate) {
+            const table = document.getElementById('weeklyTimetable');
+            if (!table) return;
+            
+            const start = new Date(startDate);
+            const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            let tableHTML = `
+                <thead>
+                    <tr>
+                        ${weekDays.map(day => `<th>${day}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+            `;
+            
+            for (let i = 0; i < 7; i++) {
+                const currentDate = new Date(start);
+                currentDate.setDate(start.getDate() + i);
+                const plan = generateDailyPlan(currentDate);
+                
+                tableHTML += `<td>`;
+                
+                if (plan.isHoliday) {
+                    tableHTML += `
+                        <div class="timetable-holiday">
+                            <i class="fas fa-umbrella-beach" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>${plan.formattedDate.split(',')[0]}</div>
+                            <div style="font-size: 0.9rem;">Holiday - No Study</div>
+                        </div>
+                    `;
+                } else {
+                    tableHTML += `
+                        <div class="timetable-day">${plan.formattedDate.split(',')[0]}</div>
+                        ${plan.subjects.map(subject => `
+                            <div class="timetable-subject">
+                                <div style="font-weight: 600; color: ${subjects[subject.name].color};">
+                                    <i class="${subject.icon}"></i> ${subject.name}
+                                </div>
+                                <div style="font-size: 0.9rem; margin: 0.5rem 0;">${subject.topic.name}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-light);">
+                                    <i class="fas fa-clock"></i> ${subject.time}
+                                </div>
+                            </div>
+                        `).join('')}
+                    `;
+                }
+                
+                tableHTML += `</td>`;
+            }
+            
+            tableHTML += `</tr></tbody>`;
+            table.innerHTML = tableHTML;
+        }
+
+        function renderRoadmap() {
+            const container = document.getElementById('roadmapLadder');
+            if (!container) return;
+            
+            container.innerHTML = roadmapData.map(semester => `
+                <div class="roadmap-item ${semester.status} ${semester.semester === appState.currentSemester ? 'current' : ''}">
+                    <div class="semester-badge">Semester ${semester.semester}</div>
+                    <div class="roadmap-content">
+                        <div class="semester-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            Semester ${semester.semester} - ${semester.status.replace('-', ' ').toUpperCase()}
+                        </div>
+                        
+                        <div class="semester-subjects">
+                            ${semester.subjects.map(subject => `
+                                <span class="subject-tag">${subject}</span>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="skills-grid">
+                            ${semester.skills.map(skill => `
+                                <div class="skill-item">
+                                    <i class="fas fa-check-circle"></i> ${skill}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="projects-list">
+                            <h4 style="margin-bottom: 0.5rem; color: var(--text-dark);">
+                                <i class="fas fa-project-diagram"></i> Recommended Projects:
+                            </h4>
+                            ${semester.projects.map(project => `
+                                <div class="project-item">
+                                    <i class="fas fa-code-branch"></i>
+                                    ${project}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProgress() {
+            // Calculate statistics
+            const totalStudyDays = appState.dailyPlans.filter(plan => !plan.isHoliday).length;
+            const completedStudyDays = Object.values(appState.completedDays).filter(Boolean).length;
+            const completionRate = totalStudyDays > 0 ? Math.round((completedStudyDays / totalStudyDays) * 100) : 0;
+            
+            // Calculate completed topics
+            const completedTopics = Object.values(appState.completedTopics).flat().length;
+            const totalTopics = 260; // Approximate total topics
+            
+            // Update UI
+            document.getElementById('totalDays').textContent = totalStudyDays;
+            document.getElementById('currentStreak').textContent = appState.currentStreak;
+            document.getElementById('bestStreak').textContent = appState.bestStreak;
+            document.getElementById('completionRate').textContent = `${completionRate}%`;
+            document.getElementById('completedTopics').textContent = completedTopics;
+            document.getElementById('studyHours').textContent = completedTopics * 1.5; // Approximate hours
+            document.getElementById('daysRemaining').textContent = totalStudyDays - completedStudyDays;
+            
+            // Calculate next subject
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowPlan = generateDailyPlan(tomorrow);
+            document.getElementById('nextSubject').textContent = 
+                tomorrowPlan.subjects.length > 0 ? tomorrowPlan.subjects[0].name.split(' ')[0] : 'Holiday';
+            
+            // Render subject progress bars
+            const subjectProgress = document.getElementById('subjectProgress');
+            if (subjectProgress) {
+                subjectProgress.innerHTML = Object.keys(subjects).map(subject => {
+                    const subjectTopics = subjects[subject].topics.length;
+                    const completedSubjectTopics = Object.values(appState.completedTopics)
+                        .filter(topic => topic.includes(subject)).length;
+                    const progressPercent = (completedSubjectTopics / subjectTopics) * 100;
+                    
+                    return `
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="font-weight: 500;">${subject}</span>
+                                <span>${completedSubjectTopics}/${subjectTopics} topics</span>
+                            </div>
+                            <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                                <div style="width: ${progressPercent}%; height: 100%; background: ${subjects[subject].color}; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ============================================
+        // EVENT HANDLERS AND STATE MANAGEMENT
+        // ============================================
+
+        function toggleDayCompletion(dateString, completed) {
+            appState.completedDays[dateString] = completed;
+            
+            // Update streak
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const todayStr = formatDateForInput(today);
+            const yesterdayStr = formatDateForInput(yesterday);
+            
+            if (completed) {
+                if (appState.lastStudyDate === yesterdayStr) {
+                    appState.currentStreak += 1;
+                } else if (appState.lastStudyDate !== todayStr) {
+                    appState.currentStreak = 1;
+                }
+                
+                appState.lastStudyDate = todayStr;
+                
+                if (appState.currentStreak > appState.bestStreak) {
+                    appState.bestStreak = appState.currentStreak;
+                }
+            } else if (dateString === todayStr) {
+                appState.currentStreak = Math.max(0, appState.currentStreak - 1);
+            }
+            
+            saveState();
+            updateStats();
+            renderDailyPlans();
+        }
+
+        function markTopicComplete(dateString, subject, topicName) {
+            if (!appState.completedTopics[dateString]) {
+                appState.completedTopics[dateString] = [];
+            }
+            
+            const topicKey = `${subject}:${topicName}`;
+            if (!appState.completedTopics[dateString].includes(topicKey)) {
+                appState.completedTopics[dateString].push(topicKey);
+                saveState();
+                updateStats();
+                
+                // Show success message
+                showNotification(`Topic marked as complete: ${topicName}`);
+            }
+        }
+
+        function saveDayNotes(dateString, notes) {
+            appState.dayNotes[dateString] = notes;
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('completedDays', JSON.stringify(appState.completedDays));
+            localStorage.setItem('dayNotes', JSON.stringify(appState.dayNotes));
+            localStorage.setItem('completedTopics', JSON.stringify(appState.completedTopics));
+            localStorage.setItem('currentStreak', appState.currentStreak.toString());
+            localStorage.setItem('bestStreak', appState.bestStreak.toString());
+            localStorage.setItem('lastStudyDate', appState.lastStudyDate);
+        }
+
+        function updateStats() {
+            renderProgress();
+        }
+
+        // ============================================
+        // PRINT FUNCTIONS
+        // ============================================
+
+        function printSection(sectionId) {
+            const originalDisplay = document.getElementById(sectionId).style.display;
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Hide other sections temporarily
+            document.querySelectorAll('.content-section').forEach(section => {
+                if (section.id !== sectionId) {
+                    section.style.display = 'none';
+                }
+            });
+            
+            window.print();
+            
+            // Restore original state
+            document.getElementById(sectionId).style.display = originalDisplay;
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = section.id === 'daily' ? 'block' : 'none';
+            });
+        }
+
+        function printSinglePlan(dateString) {
+            const plan = appState.dailyPlans.find(p => formatDateForInput(p.date) === dateString);
+            if (!plan) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Study Plan - ${plan.formattedDate}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .plan-header { background: #2563eb; color: white; padding: 20px; border-radius: 8px; }
+                            .subject-card { border-left: 4px solid; padding: 15px; margin: 15px 0; background: #f8fafc; }
+                            .topic-guide { background: white; padding: 15px; border-radius: 8px; margin-top: 10px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="plan-header">
+                            <h1>${plan.formattedDate}</h1>
+                            <p>${plan.dayName} ${plan.isHoliday ? '• Holiday' : ''}</p>
+                        </div>
+                        
+                        ${plan.isHoliday ? `
+                            <div style="text-align: center; padding: 40px;">
+                                <h2>Enjoy Your Holiday!</h2>
+                                <p>Take a break and recharge for the week ahead.</p>
+                            </div>
+                        ` : `
+                            ${plan.subjects.map(subject => `
+                                <div class="subject-card" style="border-left-color: ${subjects[subject.name].color}">
+                                    <h3>${subject.name}</h3>
+                                    <p><strong>Time:</strong> ${subject.time}</p>
+                                    <div class="topic-guide">
+                                        <h4>${subject.topic.name}</h4>
+                                        <p>${subject.topic.guide}</p>
+                                        <p><em>Estimated study time: ${subject.topic.time}</em></p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            
+                            ${appState.dayNotes[dateString] ? `
+                                <div style="margin-top: 30px;">
+                                    <h3>Notes:</h3>
+                                    <p>${appState.dayNotes[dateString]}</p>
+                                </div>
+                            ` : ''}
+                        `}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function generateWeeklyTimetable() {
+            const startDateInput = document.getElementById('weekStart');
+            renderWeeklyTimetable(startDateInput.value);
+        }
+
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-blue);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function exportData() {
+            const data = {
+                completedDays: appState.completedDays,
+                completedTopics: appState.completedTopics,
+                dayNotes: appState.dayNotes,
+                stats: {
+                    currentStreak: appState.currentStreak,
+                    bestStreak: appState.bestStreak,
+                    completionRate: document.getElementById('completionRate').textContent
+                }
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'study-planner-data.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        function init() {
+            // Initialize daily plans
+            appState.dailyPlans = generateAllPlans();
+            
+            // Set up tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding section
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Set up view filters
+            document.querySelectorAll('.view-filter').forEach(filter => {
+                filter.addEventListener('click', () => {
+                    document.querySelectorAll('.view-filter').forEach(f => f.classList.remove('active'));
+                    filter.classList.add('active');
+                    appState.viewFilter = filter.getAttribute('data-view');
+                    renderDailyPlans();
+                });
+            });
+            
+            // Set up search
+            document.getElementById('searchInput')?.addEventListener('input', renderDailyPlans);
+            document.getElementById('subjectFilter')?.addEventListener('change', renderDailyPlans);
+            
+            // Set up theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeToggle.checked = savedTheme === 'dark';
+            
+            themeToggle.addEventListener('change', () => {
+                const theme = themeToggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+            
+            // Set current date as default for weekly timetable
+            const today = new Date();
+            document.getElementById('weekStart').value = formatDateForInput(today);
+            
+            // Initial renders
+            renderDailyPlans();
+            renderWeeklyTimetable(today);
+            renderRoadmap();
+            renderProgress();
+            
+            // Add CSS for animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
