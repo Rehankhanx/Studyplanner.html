@@ -1,1 +1,3047 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Study Planner – BS Data Science (BSDS)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-gold: #D4AF37;
+--dark-gold: #B8860B;
+--light-gold: #F5E8C7;
+--dark-bg: #1a1a2e;
+--darker-bg: #16213e;
+--card-bg: #222831;
+--text-light: #eeeeee;
+--text-gray: #b0b0b0;
+--success: #10b981;
+--warning: #f59e0b;
+--info: #3b82f6;
+--border-radius: 10px;
+--shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+--shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+--primary-gold: #D4AF37;
+--dark-gold: #B8860B;
+--light-gold: #FFF9E6;
+--dark-bg: #f8f9fa;
+--darker-bg: #e9ecef;
+--card-bg: #ffffff;
+--text-light: #212529;
+--text-gray: #6c757d;
+--success: #28a745;
+--warning: #ffc107;
+--info: #17a2b8;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--dark-bg);
+color: var(--text-light);
+line-height: 1.6;
+transition: var(--transition);
+padding-top: 80px;
+background-image:
+radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 20%),
+radial-gradient(circle at 90% 80%, rgba(20, 30, 48, 0.05) 0%, transparent 20%);
+}
+
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 20px;
+}
+
+/* Professional Navigation */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+background: linear-gradient(135deg, var(--darker-bg), var(--dark-bg));
+backdrop-filter: blur(10px);
+border-bottom: 2px solid var(--primary-gold);
+z-index: 1000;
+box-shadow: var(--shadow);
+}
+
+.nav-container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+height: 80px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.logo-icon {
+background: var(--primary-gold);
+color: var(--dark-bg);
+width: 45px;
+height: 45px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+font-weight: bold;
+box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.logo-text {
+font-family: 'Poppins', sans-serif;
+}
+
+.logo-text h1 {
+font-size: 1.5rem;
+font-weight: 700;
+background: linear-gradient(45deg, var(--primary-gold), var(--light-gold));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.logo-text span {
+font-size: 0.8rem;
+color: var(--text-gray);
+}
+
+.nav-links {
+display: flex;
+gap: 2px;
+flex-wrap: wrap;
+}
+
+.nav-link {
+padding: 0.8rem 1.2rem;
+color: var(--text-light);
+text-decoration: none;
+font-weight: 500;
+border-radius: var(--border-radius);
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 8px;
+position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+background: rgba(212, 175, 55, 0.1);
+color: var(--primary-gold);
+}
+
+.nav-link.active::after {
+content: '';
+position: absolute;
+bottom: -2px;
+left: 1.2rem;
+right: 1.2rem;
+height: 2px;
+background: var(--primary-gold);
+border-radius: 2px;
+}
+
+.nav-actions {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.theme-toggle {
+background: rgba(255, 255, 255, 0.1);
+border: 1px solid rgba(212, 175, 55, 0.3);
+border-radius: 20px;
+padding: 5px;
+display: flex;
+cursor: pointer;
+}
+
+.theme-btn {
+padding: 0.5rem 1rem;
+border-radius: 15px;
+border: none;
+background: transparent;
+color: var(--text-light);
+cursor: pointer;
+transition: var(--transition);
+font-weight: 500;
+}
+
+.theme-btn.active {
+background: var(--primary-gold);
+color: var(--dark-bg);
+}
+
+.print-btn {
+background: var(--primary-gold);
+color: var(--dark-bg);
+border: none;
+padding: 0.8rem 1.5rem;
+border-radius: var(--border-radius);
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.print-btn:hover {
+background: var(--dark-gold);
+transform: translateY(-2px);
+box-shadow: var(--shadow);
+}
+
+.mobile-menu-btn {
+display: none;
+background: transparent;
+border: none;
+color: var(--text-light);
+font-size: 1.5rem;
+cursor: pointer;
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 1.5rem;
+margin-bottom: 2rem;
+}
+
+.stat-card {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+padding: 1.5rem;
+box-shadow: var(--shadow);
+border-left: 4px solid var(--primary-gold);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+}
+
+.stat-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--primary-gold), transparent);
+}
+
+.stat-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+width: 50px;
+height: 50px;
+background: rgba(212, 175, 55, 0.1);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 1rem;
+color: var(--primary-gold);
+font-size: 1.5rem;
+}
+
+.stat-content h3 {
+font-size: 0.9rem;
+color: var(--text-gray);
+margin-bottom: 0.5rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.stat-value {
+font-size: 2.2rem;
+font-weight: 700;
+margin-bottom: 0.5rem;
+background: linear-gradient(45deg, var(--primary-gold), var(--light-gold));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.stat-progress {
+height: 6px;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 3px;
+overflow: hidden;
+margin-top: 1rem;
+}
+
+.stat-progress-bar {
+height: 100%;
+background: var(--primary-gold);
+border-radius: 3px;
+transition: width 1s ease;
+}
+
+/* Content Sections */
+.content-section {
+display: none;
+animation: fadeIn 0.5s ease;
+}
+
+.content-section.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 2rem;
+flex-wrap: wrap;
+gap: 1rem;
+}
+
+.section-title {
+font-family: 'Poppins', sans-serif;
+font-size: 1.8rem;
+font-weight: 600;
+color: var(--text-light);
+position: relative;
+padding-bottom: 10px;
+}
+
+.section-title::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+width: 60px;
+height: 3px;
+background: var(--primary-gold);
+border-radius: 2px;
+}
+
+/* Daily Plans */
+.plans-controls {
+display: flex;
+gap: 1rem;
+margin-bottom: 2rem;
+flex-wrap: wrap;
+}
+
+.search-box {
+flex: 1;
+min-width: 300px;
+position: relative;
+}
+
+.search-box input,
+.search-box select {
+width: 100%;
+padding: 0.9rem 1rem 0.9rem 3rem;
+border: 1px solid rgba(212, 175, 55, 0.3);
+border-radius: var(--border-radius);
+background: var(--card-bg);
+color: var(--text-light);
+font-size: 1rem;
+transition: var(--transition);
+}
+
+.search-box input:focus,
+.search-box select:focus {
+outline: none;
+border-color: var(--primary-gold);
+box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.search-box i {
+position: absolute;
+left: 1rem;
+top: 50%;
+transform: translateY(-50%);
+color: var(--primary-gold);
+}
+
+.view-filters {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+}
+
+.view-filter {
+padding: 0.6rem 1.2rem;
+border: 1px solid rgba(212, 175, 55, 0.3);
+background: var(--card-bg);
+border-radius: 20px;
+color: var(--text-gray);
+cursor: pointer;
+transition: var(--transition);
+font-size: 0.9rem;
+font-weight: 500;
+}
+
+.view-filter:hover {
+border-color: var(--primary-gold);
+color: var(--primary-gold);
+}
+
+.view-filter.active {
+background: var(--primary-gold);
+color: var(--dark-bg);
+border-color: var(--primary-gold);
+}
+
+.daily-plans-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+gap: 1.5rem;
+margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+.daily-plans-grid {
+grid-template-columns: 1fr;
+}
+}
+
+.plan-card {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+overflow: hidden;
+box-shadow: var(--shadow);
+transition: var(--transition);
+border: 1px solid rgba(212, 175, 55, 0.2);
+position: relative;
+}
+
+.plan-card:hover {
+box-shadow: var(--shadow-lg);
+border-color: rgba(212, 175, 55, 0.4);
+transform: translateY(-5px);
+}
+
+.plan-card.holiday {
+border-left: 4px solid var(--warning);
+}
+
+.plan-header {
+padding: 1.5rem;
+border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.plan-date {
+font-family: 'Poppins', sans-serif;
+font-weight: 600;
+font-size: 1.2rem;
+}
+
+.plan-day {
+color: var(--primary-gold);
+font-size: 0.9rem;
+margin-top: 0.25rem;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.plan-status {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.holiday-badge {
+background: var(--warning);
+color: var(--dark-bg);
+padding: 0.4rem 1rem;
+border-radius: 20px;
+font-size: 0.8rem;
+font-weight: 600;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.completion-check {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.completion-check input {
+width: 20px;
+height: 20px;
+cursor: pointer;
+accent-color: var(--primary-gold);
+}
+
+.completion-check label {
+font-size: 0.85rem;
+color: var(--text-gray);
+cursor: pointer;
+}
+
+.plan-content {
+padding: 1.5rem;
+}
+
+.subject-card {
+background: rgba(255, 255, 255, 0.05);
+border-radius: var(--border-radius);
+padding: 1.25rem;
+margin-bottom: 1rem;
+border-left: 3px solid;
+transition: var(--transition);
+}
+
+.subject-card:hover {
+background: rgba(212, 175, 55, 0.05);
+}
+
+.subject-card:last-child {
+margin-bottom: 0;
+}
+
+.subject-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 0.75rem;
+}
+
+.subject-title {
+font-weight: 600;
+font-size: 1.1rem;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.subject-time {
+background: rgba(212, 175, 55, 0.1);
+padding: 0.4rem 0.8rem;
+border-radius: 20px;
+font-size: 0.85rem;
+font-weight: 600;
+color: var(--primary-gold);
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.topic-guide {
+margin-top: 1rem;
+padding: 1rem;
+background: var(--darker-bg);
+border-radius: 8px;
+border-left: 3px solid var(--primary-gold);
+}
+
+.topic-guide h4 {
+color: var(--primary-gold);
+margin-bottom: 0.5rem;
+font-size: 1rem;
+}
+
+.topic-guide p {
+font-size: 0.9rem;
+color: var(--text-light);
+line-height: 1.6;
+}
+
+.study-time {
+display: inline-block;
+margin-top: 0.8rem;
+font-size: 0.85rem;
+color: var(--text-gray);
+font-weight: 500;
+background: rgba(212, 175, 55, 0.1);
+padding: 0.3rem 0.8rem;
+border-radius: 15px;
+}
+
+.plan-actions {
+margin-top: 1.5rem;
+padding-top: 1rem;
+border-top: 1px solid rgba(212, 175, 55, 0.2);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.notes-section {
+margin-top: 1.5rem;
+}
+
+.notes-textarea {
+width: 100%;
+padding: 0.9rem;
+border: 1px solid rgba(212, 175, 55, 0.3);
+border-radius: var(--border-radius);
+background: var(--card-bg);
+color: var(--text-light);
+font-size: 0.9rem;
+resize: vertical;
+min-height: 100px;
+transition: var(--transition);
+}
+
+.notes-textarea:focus {
+outline: none;
+border-color: var(--primary-gold);
+box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Weekly Timetable */
+.week-controls {
+display: flex;
+gap: 1rem;
+margin-bottom: 2rem;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.date-picker {
+display: flex;
+gap: 1rem;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.date-picker input {
+padding: 0.9rem;
+border: 1px solid rgba(212, 175, 55, 0.3);
+border-radius: var(--border-radius);
+background: var(--card-bg);
+color: var(--text-light);
+font-size: 1rem;
+min-width: 200px;
+}
+
+.timetable-container {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+padding: 2rem;
+box-shadow: var(--shadow);
+margin-bottom: 3rem;
+overflow-x: auto;
+}
+
+.timetable {
+width: 100%;
+min-width: 1000px;
+border-collapse: collapse;
+}
+
+.timetable th {
+background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+color: var(--dark-bg);
+padding: 1.2rem;
+text-align: left;
+font-weight: 600;
+font-size: 1rem;
+border-bottom: 3px solid var(--dark-gold);
+}
+
+.timetable td {
+padding: 1.2rem;
+border: 1px solid rgba(212, 175, 55, 0.2);
+vertical-align: top;
+background: var(--card-bg);
+}
+
+.timetable tr:nth-child(even) td {
+background: rgba(255, 255, 255, 0.03);
+}
+
+.timetable-day {
+font-weight: 600;
+color: var(--primary-gold);
+margin-bottom: 0.5rem;
+display: block;
+font-size: 1.1rem;
+}
+
+.timetable-holiday {
+text-align: center;
+color: var(--warning);
+font-weight: 600;
+font-style: italic;
+padding: 2rem;
+}
+
+.timetable-subject {
+margin-bottom: 1rem;
+padding-bottom: 1rem;
+border-bottom: 1px dashed rgba(212, 175, 55, 0.3);
+}
+
+.timetable-subject:last-child {
+margin-bottom: 0;
+padding-bottom: 0;
+border-bottom: none;
+}
+
+.timetable-topic {
+font-size: 0.9rem;
+color: var(--text-light);
+margin: 0.5rem 0;
+line-height: 1.5;
+}
+
+/* Roadmap Ladder */
+.roadmap-container {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+padding: 3rem;
+box-shadow: var(--shadow);
+margin-bottom: 3rem;
+position: relative;
+}
+
+.roadmap-ladder {
+position: relative;
+padding-left: 60px;
+}
+
+.roadmap-ladder::before {
+content: '';
+position: absolute;
+left: 25px;
+top: 0;
+bottom: 0;
+width: 3px;
+background: linear-gradient(to bottom, var(--primary-gold), var(--dark-gold));
+border-radius: 3px;
+}
+
+.roadmap-item {
+position: relative;
+margin-bottom: 3rem;
+min-height: 180px;
+}
+
+.roadmap-item:last-child {
+margin-bottom: 0;
+}
+
+.roadmap-item::before {
+content: '';
+position: absolute;
+left: -40px;
+top: 20px;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: var(--text-gray);
+border: 4px solid var(--card-bg);
+z-index: 2;
+box-shadow: 0 0 0 3px var(--primary-gold);
+}
+
+.roadmap-item.completed::before {
+background: var(--success);
+}
+
+.roadmap-item.in-progress::before {
+background: var(--warning);
+animation: pulse 2s infinite;
+}
+
+.roadmap-item.upcoming::before {
+background: var(--text-gray);
+}
+
+@keyframes pulse {
+0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+.semester-badge {
+position: absolute;
+left: -85px;
+top: 10px;
+background: var(--primary-gold);
+color: var(--dark-bg);
+padding: 0.6rem 1.2rem;
+border-radius: 20px;
+font-weight: 700;
+font-size: 1rem;
+min-width: 100px;
+text-align: center;
+box-shadow: var(--shadow);
+}
+
+.roadmap-content {
+background: rgba(255, 255, 255, 0.05);
+border-radius: var(--border-radius);
+padding: 2rem;
+border: 1px solid rgba(212, 175, 55, 0.2);
+transition: var(--transition);
+}
+
+.roadmap-content:hover {
+transform: translateX(10px);
+border-color: rgba(212, 175, 55, 0.4);
+box-shadow: var(--shadow);
+}
+
+.semester-title {
+font-family: 'Poppins', sans-serif;
+font-size: 1.4rem;
+font-weight: 600;
+margin-bottom: 1.5rem;
+color: var(--primary-gold);
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.semester-subjects {
+display: flex;
+flex-wrap: wrap;
+gap: 0.8rem;
+margin-bottom: 1.5rem;
+}
+
+.subject-tag {
+background: rgba(212, 175, 55, 0.1);
+color: var(--primary-gold);
+padding: 0.5rem 1rem;
+border-radius: 20px;
+font-size: 0.9rem;
+font-weight: 500;
+border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.skills-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+gap: 1rem;
+margin-bottom: 1.5rem;
+}
+
+.skill-item {
+background: var(--darker-bg);
+padding: 1rem;
+border-radius: 8px;
+border-left: 3px solid var(--success);
+font-size: 0.9rem;
+transition: var(--transition);
+}
+
+.skill-item:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow);
+}
+
+.projects-list {
+margin-top: 1.5rem;
+padding-top: 1.5rem;
+border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.project-item {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 1rem;
+padding: 0.8rem;
+background: rgba(212, 175, 55, 0.05);
+border-radius: 8px;
+font-size: 0.9rem;
+transition: var(--transition);
+}
+
+.project-item:hover {
+background: rgba(212, 175, 55, 0.1);
+transform: translateX(5px);
+}
+
+.project-item i {
+color: var(--primary-gold);
+font-size: 1.2rem;
+}
+
+/* Certificate Generator */
+.certificate-form {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+padding: 2rem;
+box-shadow: var(--shadow);
+margin-bottom: 2rem;
+}
+
+.form-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 1.5rem;
+margin-bottom: 2rem;
+}
+
+.form-group {
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+}
+
+.form-group label {
+font-weight: 500;
+color: var(--text-gray);
+font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+padding: 0.9rem;
+border: 1px solid rgba(212, 175, 55, 0.3);
+border-radius: var(--border-radius);
+background: var(--darker-bg);
+color: var(--text-light);
+font-size: 1rem;
+transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+outline: none;
+border-color: var(--primary-gold);
+box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.certificate-preview {
+background: white;
+border-radius: var(--border-radius);
+padding: 3rem;
+margin-bottom: 2rem;
+box-shadow: var(--shadow);
+position: relative;
+border: 2px solid var(--primary-gold);
+}
+
+.certificate-border {
+position: absolute;
+top: 20px;
+left: 20px;
+right: 20px;
+bottom: 20px;
+border: 3px solid var(--primary-gold);
+pointer-events: none;
+}
+
+.certificate-header {
+text-align: center;
+margin-bottom: 2rem;
+position: relative;
+}
+
+.certificate-logo {
+font-size: 3rem;
+color: var(--primary-gold);
+margin-bottom: 1rem;
+}
+
+.certificate-title {
+font-family: 'Playfair Display', serif;
+font-size: 2.5rem;
+color: #1a1a2e;
+margin-bottom: 0.5rem;
+font-weight: 600;
+}
+
+.certificate-subtitle {
+font-size: 1.2rem;
+color: #666;
+margin-bottom: 3rem;
+}
+
+.certificate-body {
+text-align: center;
+margin-bottom: 3rem;
+}
+
+.certificate-text {
+font-size: 1.2rem;
+color: #333;
+line-height: 1.8;
+margin-bottom: 2rem;
+}
+
+.certificate-details {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+margin-bottom: 3rem;
+}
+
+.detail-item {
+text-align: center;
+}
+
+.detail-label {
+font-size: 0.9rem;
+color: #666;
+margin-bottom: 0.5rem;
+}
+
+.detail-value {
+font-size: 1.1rem;
+font-weight: 600;
+color: #1a1a2e;
+padding: 0.8rem;
+background: #f8f9fa;
+border-radius: 8px;
+border: 1px solid #dee2e6;
+}
+
+.certificate-footer {
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+margin-top: 3rem;
+}
+
+.signature-box {
+text-align: center;
+}
+
+.signature-line {
+width: 200px;
+height: 1px;
+background: #333;
+margin: 2rem auto 0.5rem;
+}
+
+.signature-text {
+font-size: 1rem;
+color: #333;
+}
+
+/* Print Styles */
+@media print {
+body {
+background: white !important;
+color: black !important;
+padding-top: 0 !important;
+}
+
+.navbar, .nav-actions, .print-btn, .mobile-menu-btn,
+.view-filters, .plans-controls, .week-controls,
+.certificate-form, .notes-textarea, .completion-check {
+display: none !important;
+}
+
+.container {
+max-width: 100% !important;
+padding: 0 !important;
+margin: 0 !important;
+}
+
+.content-section {
+display: block !important;
+break-inside: avoid;
+margin: 0 !important;
+padding: 0 !important;
+}
+
+.plan-card, .roadmap-content, .timetable-container,
+.certificate-preview, .stat-card {
+break-inside: avoid;
+box-shadow: none !important;
+border: 1px solid #ddd !important;
+margin: 10px 0 !important;
+page-break-inside: avoid;
+}
+
+.daily-plans-grid {
+grid-template-columns: 1fr !important;
+gap: 10px !important;
+}
+
+.timetable {
+min-width: auto !important;
+}
+
+.certificate-preview {
+border: 3px solid #D4AF37 !important;
+padding: 2rem !important;
+}
+
+/* Add page breaks for better printing */
+.content-section:not(:first-child) {
+page-break-before: always;
+}
+
+/* Certificate specific print styles */
+.certificate-preview {
+height: auto !important;
+width: 100% !important;
+margin: 0 auto !important;
+}
+
+.certificate-border {
+display: none !important;
+}
+}
+
+/* Footer */
+.footer {
+margin-top: 4rem;
+padding: 3rem 0;
+border-top: 1px solid rgba(212, 175, 55, 0.2);
+text-align: center;
+color: var(--text-gray);
+font-size: 0.9rem;
+}
+
+.footer-links {
+display: flex;
+justify-content: center;
+gap: 2rem;
+margin-top: 1.5rem;
+flex-wrap: wrap;
+}
+
+.footer-link {
+color: var(--primary-gold);
+text-decoration: none;
+transition: var(--transition);
+font-weight: 500;
+}
+
+.footer-link:hover {
+color: var(--light-gold);
+text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+.nav-links {
+display: none;
+position: absolute;
+top: 80px;
+left: 0;
+right: 0;
+background: var(--darker-bg);
+flex-direction: column;
+padding: 1rem;
+box-shadow: var(--shadow);
+border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.nav-links.active {
+display: flex;
+}
+
+.nav-link {
+padding: 1rem;
+border-radius: var(--border-radius);
+}
+
+.mobile-menu-btn {
+display: block;
+}
+
+.roadmap-container {
+padding: 1.5rem;
+}
+
+.roadmap-ladder {
+padding-left: 40px;
+}
+
+.roadmap-ladder::before {
+left: 15px;
+}
+
+.roadmap-item::before {
+left: -30px;
+}
+
+.semester-badge {
+position: relative;
+left: 0;
+margin-bottom: 1rem;
+display: inline-block;
+}
+
+.certificate-preview {
+padding: 1.5rem;
+}
+
+.certificate-title {
+font-size: 2rem;
+}
+}
+
+@media (max-width: 768px) {
+.nav-container {
+padding: 0 15px;
+}
+
+.dashboard-stats {
+grid-template-columns: 1fr;
+}
+
+.plans-controls, .week-controls {
+flex-direction: column;
+align-items: stretch;
+}
+
+.search-box {
+min-width: 100%;
+}
+
+.date-picker {
+flex-direction: column;
+align-items: stretch;
+}
+
+.timetable-container {
+padding: 1rem;
+}
+
+.certificate-details {
+grid-template-columns: 1fr;
+}
+
+.certificate-footer {
+flex-direction: column;
+gap: 2rem;
+align-items: center;
+}
+}
+
+/* Action Buttons
+.action-buttons {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+}
+
+.action-btn {
+padding: 0.8rem 1.5rem;
+border-radius: var(--border-radius);
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 0.9rem;
+}
+
+.action-btn.primary {
+background: var(--primary-gold);
+color: var(--dark-bg);
+border: none;
+}
+
+.action-btn.primary:hover {
+background: var(--dark-gold);
+transform: translateY(-2px);
+box-shadow: var(--shadow);
+}
+
+.action-btn.secondary {
+background: transparent;
+color: var(--primary-gold);
+border: 2px solid var(--primary-gold);
+}
+
+.action-btn.secondary:hover {
+background: var(--primary-gold);
+color: var(--dark-bg);
+transform: translateY(-2px);
+}
+
+/* Modal for Print Options */
+.modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.8);
+z-index: 2000;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+
+.modal.active {
+display: flex;
+}
+
+.modal-content {
+background: var(--card-bg);
+border-radius: var(--border-radius);
+padding: 2rem;
+max-width: 500px;
+width: 100%;
+max-height: 90vh;
+overflow-y: auto;
+box-shadow: var(--shadow-lg);
+border: 2px solid var(--primary-gold);
+}
+
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.modal-title {
+font-family: 'Poppins', sans-serif;
+font-size: 1.5rem;
+color: var(--primary-gold);
+}
+
+.close-modal {
+background: none;
+border: none;
+color: var(--text-gray);
+font-size: 1.5rem;
+cursor: pointer;
+transition: var(--transition);
+}
+
+.close-modal:hover {
+color: var(--primary-gold);
+}
+
+.modal-options {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+.print-option {
+background: rgba(255, 255, 255, 0.05);
+padding: 1.5rem;
+border-radius: var(--border-radius);
+border: 1px solid rgba(212, 175, 55, 0.2);
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+
+.print-option:hover {
+background: rgba(212, 175, 55, 0.1);
+border-color: var(--primary-gold);
+transform: translateY(-3px);
+}
+
+.print-option i {
+font-size: 1.5rem;
+color: var(--primary-gold);
+}
+
+.print-option-content h4 {
+margin-bottom: 0.5rem;
+color: var(--text-light);
+}
+
+.print-option-content p {
+font-size: 0.9rem;
+color: var(--text-gray);
+}
+
+/* Notification Toast */
+.toast {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: var(--primary-gold);
+color: var(--dark-bg);
+padding: 1rem 1.5rem;
+border-radius: var(--border-radius);
+box-shadow: var(--shadow);
+display: flex;
+align-items: center;
+gap: 10px;
+z-index: 3000;
+transform: translateY(100px);
+opacity: 0;
+transition: all 0.3s ease;
+}
+
+.toast.show {
+transform: translateY(0);
+opacity: 1;
+}
+
+.toast i {
+font-size: 1.2rem;
+}
+</style>
+</head>
+<body>
+<!-- Professional Navigation -->
+<nav class="navbar">
+<div class="nav-container">
+<div class="logo">
+<div class="logo-icon">BSDS</div>
+<div class="logo-text">
+<h1>Smart Study Planner</h1>
+<span>BS Data Science Professional</span>
+</div>
+</div>
+
+<div class="nav-links" id="navLinks">
+<a href="#" class="nav-link active" data-section="dashboard">
+<i class="fas fa-home"></i> Dashboard
+</a>
+<a href="#" class="nav-link" data-section="daily">
+<i class="fas fa-calendar-day"></i> Study Plan
+</a>
+<a href="#" class="nav-link" data-section="weekly">
+<i class="fas fa-calendar-week"></i> Weekly Timetable
+</a>
+<a href="#" class="nav-link" data-section="roadmap">
+<i class="fas fa-road"></i> Roadmap
+</a>
+<a href="#" class="nav-link" data-section="certificates">
+<i class="fas fa-award"></i> Certificates
+</a>
+<a href="#" class="nav-link" id="printOptionsBtn">
+<i class="fas fa-print"></i> Print Options
+</a>
+</div>
+
+<div class="nav-actions">
+<div class="theme-toggle">
+<button class="theme-btn active" data-theme="dark">
+<i class="fas fa-moon"></i>
+</button>
+<button class="theme-btn" data-theme="light">
+<i class="fas fa-sun"></i>
+</button>
+</div>
+<button class="print-btn" onclick="window.print()">
+<i class="fas fa-print"></i> Quick Print
+</button>
+<button class="mobile-menu-btn" id="mobileMenuBtn">
+<i class="fas fa-bars"></i>
+</button>
+</div>
+</div>
+</nav>
+
+<!-- Main Content -->
+<main class="container">
+<!-- Dashboard Section -->
+<section id="dashboard" class="content-section active">
+<div class="section-header">
+<h2 class="section-title">Study Dashboard</h2>
+<div class="action-buttons">
+<button class="action-btn primary" onclick="generateWeeklyTimetable()">
+<i class="fas fa-sync"></i> Refresh Stats
+</button>
+<button class="action-btn secondary" onclick="showPrintModal()">
+<i class="fas fa-print"></i> Print Dashboard
+</button>
+</div>
+</div>
+
+<div class="dashboard-stats">
+<div class="stat-card">
+<div class="stat-icon">
+<i class="fas fa-calendar-check"></i>
+</div>
+<div class="stat-content">
+<h3>Study Days Completed</h3>
+<div class="stat-value" id="completedDays">0</div>
+<div class="stat-subtext">Out of 60 total days</div>
+<div class="stat-progress">
+<div class="stat-progress-bar" id="daysProgress" style="width: 0%"></div>
+</div>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">
+<i class="fas fa-fire"></i>
+</div>
+<div class="stat-content">
+<h3>Current Study Streak</h3>
+<div class="stat-value" id="currentStreak">0</div>
+<div class="stat-subtext">Days in a row</div>
+<div class="stat-progress">
+<div class="stat-progress-bar" id="streakProgress" style="width: 0%"></div>
+</div>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="stat-content">
+<h3>Overall Progress</h3>
+<div class="stat-value" id="overallProgress">0%</div>
+<div class="stat-subtext">Topics completed</div>
+<div class="stat-progress">
+<div class="stat-progress-bar" id="overallProgressBar" style="width: 0%"></div>
+</div>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">
+<i class="fas fa-clock"></i>
+</div>
+<div class="stat-content">
+<h3>Study Hours This Week</h3>
+<div class="stat-value" id="weeklyHours">0</div>
+<div class="stat-subtext">Hours studied</div>
+<div class="stat-progress">
+<div class="stat-progress-bar" id="hoursProgress" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section-header" style="margin-top: 3rem;">
+<h2 class="section-title">Upcoming Study Sessions</h2>
+</div>
+
+<div id="upcomingSessions" class="daily-plans-grid">
+<!-- Upcoming sessions will be loaded here -->
+</div>
+</section>
+
+<!-- Daily Study Plans Section -->
+<section id="daily" class="content-section">
+<div class="section-header">
+<h2 class="section-title">Daily Study Plans (Jan 10 - Mar 10)</h2>
+<div class="action-buttons">
+<button class="action-btn primary" onclick="printSection('daily')">
+<i class="fas fa-print"></i> Print All Plans
+</button>
+<button class="action-btn secondary" onclick="exportDailyPlans()">
+<i class="fas fa-download"></i> Export as PDF
+</button>
+</div>
+</div>
+
+<div class="plans-controls">
+<div class="search-box">
+<i class="fas fa-search"></i>
+<input type="text" id="searchInput" placeholder="Search by date (e.g., 25 January) or topic...">
+</div>
+<div class="search-box">
+<i class="fas fa-book"></i>
+<select id="subjectFilter">
+<option value="">All Subjects</option>
+<option value="C++">C++ Programming</option>
+<option value="English">English</option>
+<option value="Statistics">Statistics</option>
+<option value="Discrete">Discrete Math</option>
+<option value="Linear">Linear Algebra</option>
+</select>
+</div>
+<div class="view-filters">
+<span class="view-filter active" data-view="all">All Days</span>
+<span class="view-filter" data-view="upcoming">Upcoming</span>
+<span class="view-filter" data-view="completed">Completed</span>
+<span class="view-filter" data-view="holidays">Holidays Only</span>
+</div>
+</div>
+
+<div id="dailyPlansContainer" class="daily-plans-grid">
+<!-- Daily plans will be loaded here -->
+</div>
+</section>
+
+<!-- Weekly Timetable Section -->
+<section id="weekly" class="content-section">
+<div class="section-header">
+<h2 class="section-title">Weekly Timetable Generator</h2>
+<div class="action-buttons">
+<button class="action-btn primary" onclick="printSection('weekly')">
+<i class="fas fa-print"></i> Print Timetable
+</button>
+<button class="action-btn secondary" onclick="exportWeeklyTimetable()">
+<i class="fas fa-download"></i> Export as PDF
+</button>
+</div>
+</div>
+
+<div class="week-controls">
+<div class="date-picker">
+<label for="weekStart">Select Start Date:</label>
+<input type="date" id="weekStart" value="2025-01-10">
+<button class="action-btn primary" onclick="generateWeeklyTimetable()">
+<i class="fas fa-sync"></i> Generate Week
+</button>
+</div>
+</div>
+
+<div class="timetable-container">
+<table class="timetable" id="weeklyTimetable">
+<!-- Weekly timetable will be generated here -->
+</table>
+</div>
+</section>
+
+<!-- Roadmap Section -->
+<section id="roadmap" class="content-section">
+<div class="section-header">
+<h2 class="section-title">BS Data Science Roadmap (Semester 1-8)</h2>
+<div class="action-buttons">
+<button class="action-btn primary" onclick="printSection('roadmap')">
+<i class="fas fa-print"></i> Print Roadmap
+</button>
+<button class="action-btn secondary" onclick="exportRoadmap()">
+<i class="fas fa-download"></i> Export as PDF
+</button>
+</div>
+</div>
+
+<div class="roadmap-container">
+<div class="roadmap-ladder" id="roadmapLadder">
+<!-- Roadmap will be loaded here -->
+</div>
+</div>
+</section>
+
+<!-- Certificates Section -->
+<section id="certificates" class="content-section">
+<div class="section-header">
+<h2 class="section-title">Achievement Certificates</h2>
+<div class="action-buttons">
+<button class="action-btn primary" onclick="generateCertificate()">
+<i class="fas fa-plus"></i> Generate Certificate
+</button>
+<button class="action-btn secondary" onclick="printCertificate()">
+<i class="fas fa-print"></i> Print Certificate
+</button>
+</div>
+</div>
+
+<div class="certificate-form">
+<h3 style="margin-bottom: 1.5rem; color: var(--primary-gold);">
+<i class="fas fa-edit"></i> Certificate Details
+</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="studentName">Student Name</label>
+<input type="text" id="studentName" placeholder="Enter student name" value="Muhammad Ali">
+</div>
+<div class="form-group">
+<label for="fatherName">Father's Name</label>
+<input type="text" id="fatherName" placeholder="Enter father's name" value="Ahmed Khan">
+</div>
+<div class="form-group">
+<label for="cnic">CNIC</label>
+<input type="text" id="cnic" placeholder="Enter CNIC number" value="42201-1234567-8">
+</div>
+<div class="form-group">
+<label for="department">Department / Code</label>
+<input type="text" id="department" placeholder="Enter department" value="BS Data Science - DS2024">
+</div>
+<div class="form-group">
+<label for="certificateType">Certificate Type</label>
+<select id="certificateType">
+<option value="completion">Study Completion Certificate</option>
+<option value="excellence">Excellence Award</option>
+<option value="progress">Progress Achievement</option>
+<option value="attendance">Perfect Attendance</option>
+</select>
+</div>
+<div class="form-group">
+<label for="issuingAuthority">Issuing Authority</label>
+<input type="text" id="issuingAuthority" placeholder="Enter issuing authority" value="BSDS Academic Board">
+</div>
+<div class="form-group">
+<label for="achievement">Achievement Description</label>
+<input type="text" id="achievement" placeholder="Enter achievement" value="Successfully completed 60-day study plan with distinction">
+</div>
+<div class="form-group">
+<label for="date">Date of Issue</label>
+<input type="date" id="certificateDate" value="2025-03-10">
+</div>
+</div>
+
+<div class="action-buttons" style="margin-top: 2rem;">
+<button class="action-btn primary" onclick="previewCertificate()">
+<i class="fas fa-eye"></i> Preview Certificate
+</button>
+<button class="action-btn secondary" onclick="downloadCertificate()">
+<i class="fas fa-download"></i> Download as PDF
+</button>
+</div>
+</div>
+
+<div class="certificate-preview" id="certificatePreview">
+<div class="certificate-border"></div>
+
+<div class="certificate-header">
+<div class="certificate-logo">
+<i class="fas fa-graduation-cap"></i>
+</div>
+<h1 class="certificate-title">CERTIFICATE OF ACHIEVEMENT</h1>
+<div class="certificate-subtitle">BS Data Science Program</div>
+</div>
+
+<div class="certificate-body">
+<p class="certificate-text">
+This is to certify that
+<br>
+<strong style="font-size: 1.4rem; color: #1a1a2e;" id="previewName">Muhammad Ali</strong>
+<br>
+has successfully demonstrated exceptional commitment and achievement in
+<br>
+<span id="previewAchievement">completing the 60-day intensive study program</span>.
+</p>
+
+<div class="certificate-details">
+<div class="detail-item">
+<div class="detail-label">Student Name</div>
+<div class="detail-value" id="previewStudentName">Muhammad Ali</div>
+</div>
+<div class="detail-item">
+<div class="detail-label">Father's Name</div>
+<div class="detail-value" id="previewFatherName">Ahmed Khan</div>
+</div>
+<div class="detail-item">
+<div class="detail-label">CNIC</div>
+<div class="detail-value" id="previewCnic">42201-1234567-8</div>
+</div>
+<div class="detail-item">
+<div class="detail-label">Department</div>
+<div class="detail-value" id="previewDepartment">BS Data Science - DS2024</div>
+</div>
+</div>
+</div>
+
+<div class="certificate-footer">
+<div class="signature-box">
+<div class="signature-line"></div>
+<div class="signature-text">Authorized Signature</div>
+</div>
+
+<div class="signature-box">
+<div style="text-align: center;">
+<div style="font-weight: 600; color: #1a1a2e;" id="previewAuthority">BSDS Academic Board</div>
+<div style="color: #666; margin-top: 0.5rem;" id="previewDate">March 10, 2025</div>
+</div>
+<div class="signature-line"></div>
+<div class="signature-text">Issuing Authority</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Print Options Modal -->
+<div class="modal" id="printModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title">Print Options</h2>
+<button class="close-modal" onclick="closePrintModal()">&times;</button>
+</div>
+<div class="modal-options">
+<div class="print-option" onclick="printSection('dashboard')">
+<i class="fas fa-chart-bar"></i>
+<div class="print-option-content">
+<h4>Print Dashboard</h4>
+<p>Print all dashboard statistics and progress reports</p>
+</div>
+</div>
+
+<div class="print-option" onclick="printSection('daily')">
+<i class="fas fa-calendar-day"></i>
+<div class="print-option-content">
+<h4>Print Daily Plans</h4>
+<p>Print all daily study plans with topics and guides</p>
+</div>
+</div>
+
+<div class="print-option" onclick="printSection('weekly')">
+<i class="fas fa-calendar-week"></i>
+<div class="print-option-content">
+<h4>Print Weekly Timetable</h4>
+<p>Print the current weekly timetable</p>
+</div>
+</div>
+
+<div class="print-option" onclick="printSection('roadmap')">
+<i class="fas fa-road"></i>
+<div class="print-option-content">
+<h4>Print Roadmap</h4>
+<p>Print the complete semester roadmap</p>
+</div>
+</div>
+
+<div class="print-option" onclick="printSection('certificates')">
+<i class="fas fa-award"></i>
+<div class="print-option-content">
+<h4>Print Certificate</h4>
+<p>Print the current achievement certificate</p>
+</div>
+</div>
+
+<div class="print-option" onclick="window.print()">
+<i class="fas fa-print"></i>
+<div class="print-option-content">
+<h4>Print Everything</h4>
+<p>Print all sections of the application</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Notification Toast -->
+<div class="toast" id="notificationToast">
+<i class="fas fa-check-circle"></i>
+<span id="toastMessage">Action completed successfully!</span>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<p>© 2024 Smart Study Planner – BS Data Science Professional Edition</p>
+<p>All study materials and certificates are auto-generated based on standard curriculum</p>
+<div class="footer-links">
+<a href="#" class="footer-link" onclick="window.print()">Print All Content</a>
+<a href="#" class="footer-link" onclick="resetProgress()">Reset Progress</a>
+<a href="#" class="footer-link" onclick="exportAllData()">Export All Data</a>
+<a href="#" class="footer-link" onclick="showPrintModal()">Print Options</a>
+</div>
+</div>
+</footer>
+
+<script>
+// ============================================
+// DATA MODELS AND CONSTANTS
+// ============================================
+
+const subjects = {
+'C++ Programming': {
+color: '#f97316',
+icon: 'fas fa-code',
+topics: [
+{
+name: 'Variables and Data Types',
+guide: 'Learn about int, float, char, and bool. Practice declaring variables and understanding memory allocation.',
+time: '1.5 hours'
+},
+{
+name: 'Input/Output Operations',
+guide: 'Master cin and cout for user interaction. Learn formatting and basic stream operations.',
+time: '1 hour'
+},
+{
+name: 'Conditional Statements',
+guide: 'Understand if, else if, else, and switch statements. Practice with real-world decision scenarios.',
+time: '2 hours'
+},
+{
+name: 'Loops',
+guide: 'Learn for, while, and do-while loops. Practice iteration patterns and loop control.',
+time: '2 hours'
+},
+{
+name: 'Functions',
+guide: 'Create reusable code blocks with functions. Learn about parameters, return types, and scope.',
+time: '2.5 hours'
+}
+]
+},
+'English': {
+color: '#10b981',
+icon: 'fas fa-language',
+topics: [
+{
+name: 'Academic Vocabulary',
+guide: 'Build technical vocabulary for data science. Learn 20 new academic words each session.',
+time: '1 hour'
+},
+{
+name: 'Grammar Review',
+guide: 'Focus on tenses, articles, and sentence structures commonly used in technical writing.',
+time: '1 hour'
+},
+{
+name: 'Technical Writing',
+guide: 'Practice writing clear explanations of algorithms and data processes.',
+time: '1.5 hours'
+},
+{
+name: 'Presentation Skills',
+guide: 'Learn to present technical concepts clearly using structured narratives.',
+time: '1.5 hours'
+}
+]
+},
+'Statistics': {
+color: '#8b5cf6',
+icon: 'fas fa-chart-bar',
+topics: [
+{
+name: 'Descriptive Statistics',
+guide: 'Calculate mean, median, mode, range, variance, and standard deviation for datasets.',
+time: '2 hours'
+},
+{
+name: 'Probability Basics',
+guide: 'Understand probability rules, conditional probability, and Bayes theorem.',
+time: '2 hours'
+},
+{
+name: 'Distributions',
+guide: 'Study normal, binomial, and Poisson distributions. Learn when to apply each.',
+time: '2.5 hours'
+},
+{
+name: 'Hypothesis Testing',
+guide: 'Learn t-tests, chi-square tests, and p-values for making data-driven decisions.',
+time: '2.5 hours'
+}
+]
+},
+'Discrete Mathematics': {
+color: '#ef4444',
+icon: 'fas fa-project-diagram',
+topics: [
+{
+name: 'Sets & Relations',
+guide: 'Understand set operations, relations, functions, and their properties.',
+time: '2 hours'
+},
+{
+name: 'Logic & Proofs',
+guide: 'Work with propositions, truth tables, logical equivalences, and basic proof techniques.',
+time: '2 hours'
+},
+{
+name: 'Counting Principles',
+guide: 'Learn permutations, combinations, and the binomial theorem with practical examples.',
+time: '2.5 hours'
+},
+{
+name: 'Graph Theory Basics',
+guide: 'Study vertices, edges, paths, cycles, and basic graph algorithms.',
+time: '2.5 hours'
+}
+]
+},
+'Linear Algebra': {
+color: '#3b82f6',
+icon: 'fas fa-vector-square',
+topics: [
+{
+name: 'Matrix Operations',
+guide: 'Master matrix addition, multiplication, transpose, and properties of matrices.',
+time: '2 hours'
+},
+{
+name: 'Systems of Equations',
+guide: 'Solve linear systems using Gaussian elimination and matrix methods.',
+time: '2.5 hours'
+},
+{
+name: 'Vector Spaces',
+guide: 'Understand vector spaces, subspaces, linear independence, and basis.',
+time: '2.5 hours'
+},
+{
+name: 'Determinants & Inverses',
+guide: 'Calculate determinants and find matrix inverses using various methods.',
+time: '2 hours'
+}
+]
+}
+};
+
+const timeSlots = [
+'09:00 - 10:30',
+'11:00 - 12:30',
+'14:00 - 15:30',
+'16:00 - 17:30',
+'19:00 - 20:30'
+];
+
+const roadmapData = [
+{
+semester: 1,
+status: 'completed',
+subjects: ['C++ Programming', 'English', 'ICT Basics', 'Calculus'],
+skills: [
+'Variables, data types, control structures',
+'Basic algorithms and problem solving',
+'Academic writing and communication',
+'Limits, derivatives, integration basics'
+],
+projects: [
+'Simple calculator program',
+'Student grade management system',
+'Technical documentation writing',
+'Math function plotter'
+]
+},
+{
+semester: 2,
+status: 'completed',
+subjects: ['OOP in C++', 'Discrete Mathematics', 'Statistics I', 'Linear Algebra'],
+skills: [
+'Classes, objects, inheritance, polymorphism',
+'Logic, sets, relations, functions',
+'Descriptive statistics, probability distributions',
+'Matrix operations, systems of equations'
+],
+projects: [
+'Library management system',
+'Logic circuit simulator',
+'Statistical analysis of datasets',
+'Linear equation solver'
+]
+},
+{
+semester: 3,
+status: 'in-progress',
+subjects: ['Data Structures', 'Database Systems', 'Probability & Statistics II', 'Numerical Methods'],
+skills: [
+'Stacks, queues, linked lists, trees',
+'SQL queries, normalization, ER diagrams',
+'Hypothesis testing, regression analysis',
+'Numerical integration, root finding'
+],
+projects: [
+'Expression evaluator using stacks',
+'E-commerce database design',
+'Statistical inference project',
+'Equation solver using numerical methods'
+]
+},
+{
+semester: 4,
+status: 'in-progress',
+subjects: ['Python for DS', 'Data Visualization', 'Data Cleaning', 'Web Technologies'],
+skills: [
+'Pandas, NumPy, basic Python programming',
+'Matplotlib, Seaborn, plot customization',
+'Handling missing data, outlier detection',
+'HTML, CSS, JavaScript basics'
+],
+projects: [
+'Data analysis of COVID-19 dataset',
+'Interactive dashboard creation',
+'Data cleaning pipeline',
+'Personal portfolio website'
+]
+},
+{
+semester: 5,
+status: 'upcoming',
+subjects: ['Machine Learning I', 'Big Data Basics', 'Data Mining', 'Cloud Computing'],
+skills: [
+'Linear regression, logistic regression',
+'Hadoop, Spark basics, MapReduce',
+'Clustering, association rule mining',
+'AWS/Azure basics, storage services'
+],
+projects: [
+'House price prediction model',
+'Word count using MapReduce',
+'Customer segmentation analysis',
+'Cloud deployment of web app'
+]
+},
+{
+semester: 6,
+status: 'upcoming',
+subjects: ['Machine Learning II', 'Deep Learning Basics', 'NLP', 'Time Series'],
+skills: [
+'Decision trees, SVM, ensemble methods',
+'Neural networks, backpropagation',
+'Text preprocessing, sentiment analysis',
+'ARIMA, forecasting techniques'
+],
+projects: [
+'Image classifier using CNN',
+'Spam detection system',
+'Stock price prediction',
+'News sentiment analyzer'
+]
+},
+{
+semester: 7,
+status: 'upcoming',
+subjects: ['Advanced DL', 'Computer Vision', 'Recommender Systems', 'Model Deployment'],
+skills: [
+'Advanced neural architectures',
+'Image processing, object detection',
+'Collaborative filtering, content-based',
+'Docker, Flask/FastAPI, model serving'
+],
+projects: [
+'Object detection system',
+'Movie recommendation engine',
+'Model deployment on cloud',
+'Real-time prediction API'
+]
+},
+{
+semester: 8,
+status: 'upcoming',
+subjects: ['Capstone Project', 'Industry Training', 'Advanced Topics', 'Research Methods'],
+skills: [
+'End-to-end project development',
+'Industry best practices',
+'Current research trends',
+'Paper writing, presentation skills'
+],
+projects: [
+'Comprehensive data science project',
+'Industry internship project',
+'Research paper implementation',
+'Thesis/dissertation work'
+]
+}
+];
+
+// ============================================
+// APPLICATION STATE
+// ============================================
+
+const appState = {
+dailyPlans: [],
+completedDays: JSON.parse(localStorage.getItem('completedDays')) || {},
+dayNotes: JSON.parse(localStorage.getItem('dayNotes')) || {},
+completedTopics: JSON.parse(localStorage.getItem('completedTopics')) || {},
+currentStreak: parseInt(localStorage.getItem('currentStreak')) || 0,
+bestStreak: parseInt(localStorage.getItem('bestStreak')) || 0,
+totalStudyHours: parseInt(localStorage.getItem('totalStudyHours')) || 0,
+lastStudyDate: localStorage.getItem('lastStudyDate') || null,
+viewFilter: 'all',
+currentSemester: 3,
+certificates: JSON.parse(localStorage.getItem('certificates')) || []
+};
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+function formatDate(date) {
+return date.toLocaleDateString('en-US', {
+day: 'numeric',
+month: 'long',
+weekday: 'long',
+year: 'numeric'
+});
+}
+
+function formatDateShort(date) {
+return date.toLocaleDateString('en-US', {
+day: 'numeric',
+month: 'short'
+});
+}
+
+function formatDateForInput(date) {
+return date.toISOString().split('T')[0];
+}
+
+function getDayName(date) {
+return date.toLocaleDateString('en-US', { weekday: 'long' });
+}
+
+function generateDailyPlan(date) {
+const dayName = getDayName(date);
+const isSunday = dayName === 'Sunday';
+
+if (isSunday) {
+return {
+date: new Date(date),
+formattedDate: formatDate(date),
+shortDate: formatDateShort(date),
+dayName: dayName,
+isHoliday: true,
+subjects: []
+};
+}
+
+const subjectList = Object.keys(subjects);
+const dayIndex = Math.floor((date - new Date('2025-01-10')) / (1000 * 60 * 60 * 24));
+const subjectIndex1 = dayIndex % subjectList.length;
+const subjectIndex2 = (dayIndex + 2) % subjectList.length;
+
+const selectedSubjects = [
+subjectList[subjectIndex1],
+subjectList[subjectIndex2]
+];
+
+const planSubjects = selectedSubjects.map((subject, index) => {
+const subjectData = subjects[subject];
+const topicIndex = Math.floor(dayIndex / 5) % subjectData.topics.length;
+
+return {
+name: subject,
+color: subjectData.color,
+icon: subjectData.icon,
+time: timeSlots[index % timeSlots.length],
+topic: subjectData.topics[topicIndex]
+};
+});
+
+return {
+date: new Date(date),
+formattedDate: formatDate(date),
+shortDate: formatDateShort(date),
+dayName: dayName,
+isHoliday: false,
+subjects: planSubjects
+};
+}
+
+function generateAllPlans() {
+const plans = [];
+const currentDate = new Date('2025-01-10');
+const endDate = new Date('2025-03-10');
+
+while (currentDate <= endDate) {
+plans.push(generateDailyPlan(new Date(currentDate)));
+currentDate.setDate(currentDate.getDate() + 1);
+}
+
+return plans;
+}
+
+function calculateStats() {
+const totalDays = 60;
+const holidayDays = 8; // Approximate Sundays
+const studyDays = totalDays - holidayDays;
+
+const completedStudyDays = Object.values(appState.completedDays).filter(Boolean).length;
+const completionRate = Math.round((completedStudyDays / studyDays) * 100);
+
+const totalTopics = 5 * 4 * 5; // 5 subjects * 4 topics each * 5 weeks
+const completedTopics = Object.values(appState.completedTopics).flat().length;
+const topicProgress = Math.round((completedTopics / totalTopics) * 100);
+
+// Update streak
+// Update streak
+const today = new Date();
+today.setHours(0, 0, 0, 0); // FIXED: parentheses and 4 arguments (ms included)
+
+const yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1);
+
+const todayStr = formatDateForInput(today);
+const yesterdayStr = formatDateForInput(yesterday);
+
+if (appState.completedDays[todayStr]) {
+  if (appState.lastStudyDate === yesterdayStr) {
+    appState.currentStreak++;
+  } else if (appState.lastStudyDate !== todayStr) {
+    appState.currentStreak = 1;
+  }
+  appState.lastStudyDate = todayStr;
+}
+
+if (appState.currentStreak > appState.bestStreak) {
+  appState.bestStreak = appState.currentStreak;
+}
+
+// Calculate weekly hours
+const lastWeek = new Date(today);
+lastWeek.setDate(lastWeek.getDate() - 7);
+let weeklyHours = 0;
+
+for (const [date, completed] of Object.entries(appState.completedDays)) {
+if (completed && new Date(date) >= lastWeek) {
+weeklyHours += 3; // Approximate 3 hours per study day
+}
+}
+
+return {
+completedDays: completedStudyDays,
+totalDays: studyDays,
+completionRate,
+currentStreak: appState.currentStreak,
+bestStreak: appState.bestStreak,
+topicProgress,
+completedTopics,
+totalTopics,
+weeklyHours
+};
+}
+
+function saveState() {
+localStorage.setItem('completedDays', JSON.stringify(appState.completedDays));
+localStorage.setItem('dayNotes', JSON.stringify(appState.dayNotes));
+localStorage.setItem('completedTopics', JSON.stringify(appState.completedTopics));
+localStorage.setItem('currentStreak', appState.currentStreak.toString());
+localStorage.setItem('bestStreak', appState.bestStreak.toString());
+localStorage.setItem('totalStudyHours', appState.totalStudyHours.toString());
+localStorage.setItem('lastStudyDate', appState.lastStudyDate);
+localStorage.setItem('certificates', JSON.stringify(appState.certificates));
+}
+
+function showToast(message, type = 'success') {
+const toast = document.getElementById('notificationToast');
+const messageEl = document.getElementById('toastMessage');
+
+messageEl.textContent = message;
+toast.style.background = type === 'success' ? 'var(--primary-gold)' :
+type === 'error' ? '#ef4444' : 'var(--warning)';
+
+toast.classList.add('show');
+
+setTimeout(() => {
+toast.classList.remove('show');
+}, 3000);
+}
+
+// ============================================
+// RENDER FUNCTIONS
+// ============================================
+
+function renderDashboard() {
+const stats = calculateStats();
+
+// Update stat cards
+document.getElementById('completedDays').textContent = `${stats.completedDays}/${stats.totalDays}`;
+document.getElementById('currentStreak').textContent = stats.currentStreak;
+document.getElementById('overallProgress').textContent = `${stats.completionRate}%`;
+document.getElementById('weeklyHours').textContent = stats.weeklyHours;
+
+// Update progress bars
+document.getElementById('daysProgress').style.width = `${(stats.completedDays / stats.totalDays) * 100}%`;
+document.getElementById('streakProgress').style.width = `${Math.min((stats.currentStreak / 30) * 100, 100)}%`;
+document.getElementById('overallProgressBar').style.width = `${stats.completionRate}%`;
+document.getElementById('hoursProgress').style.width = `${Math.min((stats.weeklyHours / 20) * 100, 100)}%`;
+
+// Render upcoming sessions
+renderUpcomingSessions();
+}
+
+function renderUpcomingSessions() {
+const container = document.getElementById('upcomingSessions');
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const upcomingPlans = appState.dailyPlans
+.filter(plan => plan.date >= today && !plan.isHoliday)
+.slice(0, 3);
+
+container.innerHTML = upcomingPlans.map(plan => `
+<div class="plan-card">
+<div class="plan-header">
+<div>
+<div class="plan-date">${plan.shortDate}</div>
+<div class="plan-day">
+<i class="far fa-calendar"></i> ${plan.dayName}
+</div>
+</div>
+</div>
+<div class="plan-content">
+${plan.subjects.map(subject => `
+<div class="subject-card" style="border-left-color: ${subject.color}">
+<div class="subject-header">
+<div class="subject-title">
+<i class="${subject.icon}"></i>
+${subject.name}
+</div>
+<div class="subject-time">
+<i class="fas fa-clock"></i> ${subject.time}
+</div>
+</div>
+<div class="topic-guide">
+<h4>${subject.topic.name}</h4>
+<p>${subject.topic.guide}</p>
+<span class="study-time">
+<i class="fas fa-hourglass-half"></i> ${subject.topic.time}
+</span>
+</div>
+</div>
+`).join('')}
+</div>
+</div>
+`).join('');
+}
+
+function renderDailyPlans() {
+const container = document.getElementById('dailyPlansContainer');
+let filteredPlans = [...appState.dailyPlans];
+
+// Apply view filter
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+switch (appState.viewFilter) {
+case 'upcoming':
+filteredPlans = filteredPlans.filter(plan =>
+plan.date >= today && !plan.isHoliday
+);
+break;
+case 'completed':
+filteredPlans = filteredPlans.filter(plan =>
+appState.completedDays[formatDateForInput(plan.date)]
+);
+break;
+case 'holidays':
+filteredPlans = filteredPlans.filter(plan => plan.isHoliday);
+break;
+}
+
+// Apply search filter
+const searchInput = document.getElementById('searchInput');
+const subjectFilter = document.getElementById('subjectFilter');
+
+if (searchInput && searchInput.value) {
+const searchTerm = searchInput.value.toLowerCase();
+filteredPlans = filteredPlans.filter(plan =>
+plan.formattedDate.toLowerCase().includes(searchTerm) ||
+plan.subjects.some(subject =>
+subject.name.toLowerCase().includes(searchTerm) ||
+subject.topic.name.toLowerCase().includes(searchTerm)
+)
+);
+}
+
+if (subjectFilter && subjectFilter.value) {
+filteredPlans = filteredPlans.filter(plan =>
+plan.subjects.some(subject =>
+subject.name.includes(subjectFilter.value)
+)
+);
+}
+
+// Render plans
+container.innerHTML = filteredPlans.map(plan => {
+const dateKey = formatDateForInput(plan.date);
+const isCompleted = appState.completedDays[dateKey];
+const notes = appState.dayNotes[dateKey] || '';
+
+return `
+<div class="plan-card ${plan.isHoliday ? 'holiday' : ''} ${isCompleted ? 'completed' : ''}">
+${!plan.isHoliday ? `
+<button class="print-btn" style="position: absolute; top: 1rem; right: 1rem; padding: 0.5rem;"
+onclick="printSinglePlan('${dateKey}')">
+<i class="fas fa-print"></i>
+</button>
+` : ''}
+
+<div class="plan-header">
+<div>
+<div class="plan-date">${plan.formattedDate}</div>
+<div class="plan-day">
+<i class="far fa-calendar"></i> ${plan.dayName}
+</div>
+</div>
+<div class="plan-status">
+${plan.isHoliday ?
+'<span class="holiday-badge"><i class="fas fa-umbrella-beach"></i> Holiday</span>' :
+`<div class="completion-check">
+<input type="checkbox" id="completed-${dateKey}"
+${isCompleted ? 'checked' : ''}
+onchange="toggleDayCompletion('${dateKey}', this.checked)">
+<label for="completed-${dateKey}">Completed</label>
+</div>`
+}
+</div>
+</div>
+
+<div class="plan-content">
+${plan.isHoliday ? `
+<div style="text-align: center; padding: 3rem; color: var(--text-gray);">
+<i class="fas fa-umbrella-beach" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+<h3 style="color: var(--warning);">Enjoy Your Holiday!</h3>
+<p>Take a break and recharge for the week ahead.</p>
+</div>
+` : `
+${plan.subjects.map((subject, index) => {
+const topicKey = `${dateKey}-${subject.name}-${subject.topic.name}`;
+const isTopicCompleted = (appState.completedTopics[dateKey] || []).includes(topicKey);
+
+return `
+<div class="subject-card" style="border-left-color: ${subject.color}">
+<div class="subject-header">
+<div class="subject-title">
+<i class="${subject.icon}"></i>
+${subject.name}
+</div>
+<div class="subject-time">
+<i class="fas fa-clock"></i> ${subject.time}
+</div>
+</div>
+
+<div class="topic-guide">
+<h4>${subject.topic.name}</h4>
+<p>${subject.topic.guide}</p>
+<span class="study-time">
+<i class="fas fa-hourglass-half"></i> ${subject.topic.time}
+</span>
+</div>
+
+<div style="margin-top: 1rem;">
+<button class="action-btn ${isTopicCompleted ? 'primary' : 'secondary'}"
+style="padding: 0.5rem 1rem; font-size: 0.85rem;"
+onclick="toggleTopicCompletion('${dateKey}', '${subject.name}', '${subject.topic.name}')">
+<i class="fas fa-${isTopicCompleted ? 'check-circle' : 'circle'}"></i>
+${isTopicCompleted ? 'Topic Completed' : 'Mark as Complete'}
+</button>
+</div>
+</div>
+`;
+}).join('')}
+
+<div class="notes-section">
+<h4 style="margin-bottom: 0.8rem; color: var(--primary-gold);">
+<i class="fas fa-edit"></i> Study Notes
+</h4>
+<textarea class="notes-textarea"
+placeholder="Add notes for today's study session..."
+onchange="saveDayNotes('${dateKey}', this.value)">${notes}</textarea>
+</div>
+`}
+</div>
+</div>
+`;
+}).join('');
+}
+
+function renderWeeklyTimetable(startDateStr = '2025-01-10') {
+const container = document.getElementById('weeklyTimetable');
+const startDate = new Date(startDateStr);
+
+let tableHTML = `
+<thead>
+<tr>
+<th>Monday</th>
+<th>Tuesday</th>
+<th>Wednesday</th>
+<th>Thursday</th>
+<th>Friday</th>
+<th>Saturday</th>
+<th>Sunday</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+`;
+
+for (let i = 0; i < 7; i++) {
+const currentDate = new Date(startDate);
+currentDate.setDate(startDate.getDate() + i);
+const plan = generateDailyPlan(currentDate);
+
+tableHTML += `<td>`;
+
+if (plan.isHoliday) {
+tableHTML += `
+<div class="timetable-holiday">
+<i class="fas fa-umbrella-beach" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+<div style="font-weight: 600;">${plan.shortDate}</div>
+<div style="font-size: 0.9rem; margin-top: 0.5rem;">Holiday - No Study</div>
+</div>
+`;
+} else {
+tableHTML += `
+<div class="timetable-day">${plan.shortDate}</div>
+${plan.subjects.map(subject => `
+<div class="timetable-subject">
+<div style="font-weight: 600; color: ${subject.color};">
+<i class="${subject.icon}"></i> ${subject.name}
+</div>
+<div class="timetable-topic">${subject.topic.name}</div>
+<div style="font-size: 0.85rem; color: var(--primary-gold);">
+<i class="fas fa-clock"></i> ${subject.time}
+</div>
+<div style="font-size: 0.8rem; color: var(--text-gray); margin-top: 0.5rem;">
+${subject.topic.guide}
+</div>
+</div>
+`).join('')}
+`;
+}
+
+tableHTML += `</td>`;
+}
+
+tableHTML += `</tr></tbody>`;
+container.innerHTML = tableHTML;
+}
+
+function renderRoadmap() {
+const container = document.getElementById('roadmapLadder');
+
+container.innerHTML = roadmapData.map(semester => `
+<div class="roadmap-item ${semester.status}">
+<div class="semester-badge">Semester ${semester.semester}</div>
+<div class="roadmap-content">
+<div class="semester-title">
+<i class="fas fa-graduation-cap"></i>
+Semester ${semester.semester}
+<span style="font-size: 0.9rem; background: ${
+semester.status === 'completed' ? 'var(--success)' :
+semester.status === 'in-progress' ? 'var(--warning)' : 'var(--text-gray)'
+}; color: var(--dark-bg); padding: 0.3rem 0.8rem; border-radius: 15px;">
+${semester.status.replace('-', ' ').toUpperCase()}
+</span>
+</div>
+
+<div class="semester-subjects">
+${semester.subjects.map(subject => `
+<span class="subject-tag">
+<i class="fas fa-book"></i> ${subject}
+</span>
+`).join('')}
+</div>
+
+<div class="skills-grid">
+${semester.skills.map(skill => `
+<div class="skill-item">
+<i class="fas fa-check"></i> ${skill}
+</div>
+`).join('')}
+</div>
+
+<div class="projects-list">
+<h4 style="margin-bottom: 1rem; color: var(--primary-gold);">
+<i class="fas fa-project-diagram"></i> Recommended Projects:
+</h4>
+${semester.projects.map(project => `
+<div class="project-item">
+<i class="fas fa-code-branch"></i>
+${project}
+</div>
+`).join('')}
+</div>
+</div>
+</div>
+`).join('');
+}
+
+// ============================================
+// EVENT HANDLERS
+// ============================================
+
+function toggleDayCompletion(dateString, completed) {
+appState.completedDays[dateString] = completed;
+
+if (completed) {
+appState.totalStudyHours += 3; // Approximate 3 hours per study day
+showToast('Day marked as completed!', 'success');
+} else {
+appState.totalStudyHours = Math.max(0, appState.totalStudyHours - 3);
+showToast('Day marked as incomplete', 'warning');
+}
+
+saveState();
+renderDashboard();
+renderDailyPlans();
+}
+
+function toggleTopicCompletion(dateString, subject, topicName) {
+const topicKey = `${dateString}-${subject}-${topicName}`;
+
+if (!appState.completedTopics[dateString]) {
+appState.completedTopics[dateString] = [];
+}
+
+const index = appState.completedTopics[dateString].indexOf(topicKey);
+
+if (index === -1) {
+appState.completedTopics[dateString].push(topicKey);
+showToast(`Topic completed: ${topicName}`, 'success');
+} else {
+appState.completedTopics[dateString].splice(index, 1);
+showToast(`Topic marked as incomplete`, 'warning');
+}
+
+saveState();
+renderDashboard();
+renderDailyPlans();
+}
+
+function saveDayNotes(dateString, notes) {
+appState.dayNotes[dateString] = notes;
+saveState();
+showToast('Notes saved successfully!', 'success');
+}
+
+// ============================================
+// PRINT FUNCTIONS
+// ============================================
+
+function printSection(sectionId) {
+// Hide other sections
+document.querySelectorAll('.content-section').forEach(section => {
+if (section.id !== sectionId) {
+section.style.display = 'none';
+}
+});
+
+// Hide navigation
+document.querySelector('.navbar').style.display = 'none';
+document.querySelector('.footer').style.display = 'none';
+
+// Print
+window.print();
+
+// Restore display
+document.querySelectorAll('.content-section').forEach(section => {
+section.style.display = 'none';
+});
+document.getElementById(sectionId).style.display = 'block';
+document.querySelector('.navbar').style.display = 'block';
+document.querySelector('.footer').style.display = 'block';
+
+// Re-activate current section
+const activeSection = document.querySelector(`.nav-link.active`).getAttribute('data-section');
+document.getElementById(activeSection).style.display = 'block';
+}
+
+function printSinglePlan(dateString) {
+const plan = appState.dailyPlans.find(p => formatDateForInput(p.date) === dateString);
+if (!plan) return;
+
+const printContent = `
+<!DOCTYPE html>
+<html>
+<head>
+<title>Study Plan - ${plan.formattedDate}</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+.header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #D4AF37; padding-bottom: 20px; }
+.date { font-size: 1.8rem; font-weight: bold; color: #1a1a2e; }
+.subject-card { border-left: 4px solid; padding: 15px; margin: 20px 0; background: #f8f9fa; }
+.topic-guide { background: white; padding: 15px; border-radius: 8px; margin-top: 10px; }
+.gold { color: #D4AF37; }
+.notes { background: #fff9e6; padding: 15px; border-radius: 8px; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="header">
+<h1 class="gold">BS Data Science Study Plan</h1>
+<div class="date">${plan.formattedDate}</div>
+<div style="color: #666; margin-top: 10px;">${plan.dayName} ${plan.isHoliday ? '• Holiday' : ''}</div>
+</div>
+
+${plan.isHoliday ? `
+<div style="text-align: center; padding: 40px; color: #666;">
+<h2>Enjoy Your Holiday!</h2>
+<p>Take a break and recharge for the week ahead.</p>
+</div>
+` : `
+${plan.subjects.map(subject => `
+<div class="subject-card" style="border-left-color: ${subject.color}">
+<h3>${subject.name}</h3>
+<p><strong>Time:</strong> ${subject.time}</p>
+<div class="topic-guide">
+<h4>${subject.topic.name}</h4>
+<p>${subject.topic.guide}</p>
+<p><em>Estimated study time: ${subject.topic.time}</em></p>
+</div>
+</div>
+`).join('')}
+
+${appState.dayNotes[dateString] ? `
+<div class="notes">
+<h3>Study Notes:</h3>
+<p>${appState.dayNotes[dateString]}</p>
+</div>
+` : ''}
+`}
+</body>
+</html>
+`;
+
+const printWindow = window.open('', '_blank');
+printWindow.document.write(printContent);
+printWindow.document.close();
+printWindow.print();
+}
+
+// ============================================
+// CERTIFICATE FUNCTIONS
+// ============================================
+
+function previewCertificate() {
+const studentName = document.getElementById('studentName').value || 'Student Name';
+const fatherName = document.getElementById('fatherName').value || 'Father\'s Name';
+const cnic = document.getElementById('cnic').value || 'CNIC Number';
+const department = document.getElementById('department').value || 'Department';
+const achievement = document.getElementById('achievement').value || 'Achievement';
+const authority = document.getElementById('issuingAuthority').value || 'Issuing Authority';
+const date = document.getElementById('certificateDate').value;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+year: 'numeric',
+month: 'long',
+day: 'numeric'
+});
+
+// Update preview
+document.getElementById('previewName').textContent = studentName;
+document.getElementById('previewStudentName').textContent = studentName;
+document.getElementById('previewFatherName').textContent = fatherName;
+document.getElementById('previewCnic').textContent = cnic;
+document.getElementById('previewDepartment').textContent = department;
+document.getElementById('previewAchievement').textContent = achievement;
+document.getElementById('previewAuthority').textContent = authority;
+document.getElementById('previewDate').textContent = formattedDate;
+
+// Scroll to preview
+document.getElementById('certificatePreview').scrollIntoView({ behavior: 'smooth' });
+showToast('Certificate preview updated!', 'success');
+}
+
+function generateCertificate() {
+previewCertificate();
+showToast('Certificate generated successfully!', 'success');
+
+// Save certificate to history
+const certificateData = {
+id: Date.now(),
+studentName: document.getElementById('studentName').value,
+fatherName: document.getElementById('fatherName').value,
+cnic: document.getElementById('cnic').value,
+department: document.getElementById('department').value,
+type: document.getElementById('certificateType').value,
+authority: document.getElementById('issuingAuthority').value,
+achievement: document.getElementById('achievement').value,
+date: document.getElementById('certificateDate').value,
+generatedAt: new Date().toISOString()
+};
+
+appState.certificates.unshift(certificateData);
+if (appState.certificates.length > 10) {
+appState.certificates.pop();
+}
+
+saveState();
+}
+
+function printCertificate() {
+printSection('certificates');
+}
+
+function downloadCertificate() {
+// For now, use print functionality as PDF generation
+printCertificate();
+showToast('Use Print dialog and choose "Save as PDF" option', 'info');
+}
+
+// ============================================
+// MODAL FUNCTIONS
+// ============================================
+
+function showPrintModal() {
+document.getElementById('printModal').classList.add('active');
+}
+
+function closePrintModal() {
+document.getElementById('printModal').classList.remove('active');
+}
+
+// ============================================
+// EXPORT FUNCTIONS
+// ============================================
+
+function exportDailyPlans() {
+const data = {
+plans: appState.dailyPlans,
+completedDays: appState.completedDays,
+dayNotes: appState.dayNotes,
+completedTopics: appState.completedTopics,
+stats: calculateStats()
+};
+
+const dataStr = JSON.stringify(data, null, 2);
+const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+const linkElement = document.createElement('a');
+linkElement.setAttribute('href', dataUri);
+linkElement.setAttribute('download', 'bsds-study-plans.json');
+linkElement.click();
+
+showToast('Daily plans exported successfully!', 'success');
+}
+
+function exportAllData() {
+const data = {
+appState: appState,
+stats: calculateStats(),
+exportedAt: new Date().toISOString()
+};
+
+const dataStr = JSON.stringify(data, null, 2);
+const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+const linkElement = document.createElement('a');
+linkElement.setAttribute('href', dataUri);
+linkElement.setAttribute('download', 'bsds-complete-data.json');
+linkElement.click();
+
+showToast('All data exported successfully!', 'success');
+}
+
+function resetProgress() {
+if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+localStorage.clear();
+location.reload();
+}
+}
+
+// ============================================
+// INITIALIZATION
+// ============================================
+
+function init() {
+// Initialize daily plans
+appState.dailyPlans = generateAllPlans();
+
+// Set up navigation
+document.querySelectorAll('.nav-link').forEach(link => {
+link.addEventListener('click', (e) => {
+e.preventDefault();
+
+// Update active nav link
+document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+link.classList.add('active');
+
+// Show corresponding section
+const sectionId = link.getAttribute('data-section');
+document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+document.getElementById(sectionId).classList.add('active');
+
+// Close mobile menu if open
+document.getElementById('navLinks').classList.remove('active');
+
+// Scroll to top
+window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+});
+
+// Set up mobile menu
+document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+document.getElementById('navLinks').classList.toggle('active');
+});
+
+// Set up theme toggle
+document.querySelectorAll('.theme-btn').forEach(btn => {
+btn.addEventListener('click', () => {
+const theme = btn.getAttribute('data-theme');
+
+// Update active button
+document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+
+// Set theme
+document.documentElement.setAttribute('data-theme', theme);
+localStorage.setItem('theme', theme);
+});
+});
+
+// Set default theme
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).classList.add('active');
+
+// Set up view filters
+document.querySelectorAll('.view-filter').forEach(filter => {
+filter.addEventListener('click', () => {
+document.querySelectorAll('.view-filter').forEach(f => f.classList.remove('active'));
+filter.classList.add('active');
+appState.viewFilter = filter.getAttribute('data-view');
+renderDailyPlans();
+});
+});
+
+// Set up search
+document.getElementById('searchInput')?.addEventListener('input', renderDailyPlans);
+document.getElementById('subjectFilter')?.addEventListener('change', renderDailyPlans);
+
+// Set up week date picker
+document.getElementById('weekStart').addEventListener('change', function() {
+renderWeeklyTimetable(this.value);
+});
+
+// Set print options button
+document.getElementById('printOptionsBtn').addEventListener('click', (e) => {
+e.preventDefault();
+showPrintModal();
+});
+
+// Close modal on outside click
+document.getElementById('printModal').addEventListener('click', (e) => {
+if (e.target === document.getElementById('printModal')) {
+closePrintModal();
+}
+});
+
+// Close modal on escape key
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+closePrintModal();
+}
+});
+
+// Initial renders
+renderDashboard();
+renderDailyPlans();
+renderWeeklyTimetable();
+renderRoadmap();
+previewCertificate();
+
+// Auto-generate certificate based on progress
+const stats = calculateStats();
+if (stats.completionRate >= 50 && stats.completionRate < 100) {
+document.getElementById('achievement').value = `Successfully completed ${stats.completionRate}% of the 60-day study program`;
+} else if (stats.completionRate === 100) {
+document.getElementById('achievement').value = 'Successfully completed the entire 60-day intensive study program with distinction';
+document.getElementById('certificateType').value = 'excellence';
+}
+
+// Show welcome message
+setTimeout(() => {
+showToast('Welcome to BS Data Science Study Planner!', 'success');
+}, 1000);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
