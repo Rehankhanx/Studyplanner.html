@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personal Data Science Teacher (2026-2029)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --critical: #dc2626;
+            --important: #d97706;
+            --optional: #059669;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item i {
+            font-size: 1.2rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 800px;
+        }
+
+        .sidebar {
+            background: #f8fafc;
+            padding: 30px 20px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .progress-section {
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .main-content {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+
+        .year-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .year-btn {
+            padding: 8px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .year-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .roadmap-phase {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .roadmap-phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .phase-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .phase-timeline {
+            font-size: 0.9rem;
+            color: var(--gray);
+            background: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .phase-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .skill-critical {
+            background: #fee2e2;
+            color: var(--critical);
+            border: 1px solid #fecaca;
+        }
+
+        .skill-important {
+            background: #fef3c7;
+            color: var(--important);
+            border: 1px solid #fde68a;
+        }
+
+        .skill-optional {
+            background: #d1fae5;
+            color: var(--optional);
+            border: 1px solid #a7f3d0;
+        }
+
+        .task-generator {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .date-selector {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .date-input {
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .generate-btn {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .daily-task {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid #bae6fd;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .task-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .task-priority {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .priority-critical {
+            background: var(--critical);
+            color: white;
+        }
+
+        .priority-important {
+            background: var(--important);
+            color: white;
+        }
+
+        .priority-optional {
+            background: var(--optional);
+            color: white;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .meta-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .task-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .checkbox-list {
+            list-style: none;
+        }
+
+        .checkbox-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-list input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .prompt-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #475569;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day.studied {
+            background: #dbeafe;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .calendar-day.current {
+            border: 2px solid var(--primary);
+        }
+
+        .exam-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .exam-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .exam-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        .status-upcoming {
+            background: #fef3c7;
+            color: var(--important);
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: var(--optional);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .difficulty-beginner {
+            background: #d1fae5;
+            color: var(--optional);
+        }
+
+        .difficulty-intermediate {
+            background: #fef3c7;
+            color: var(--important);
+        }
+
+        .difficulty-advanced {
+            background: #fee2e2;
+            color: var(--critical);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+        }
+
+        .skill-dot.filled {
+            background: var(--primary);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .date-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-robot"></i> AI Personal Data Science Teacher</h1>
+                <p class="subtitle">Your Complete Learning System (2026-2029) • Saudi Arabia / Gulf Job Market Focus</p>
+                
+                <div class="user-info">
+                    <div class="info-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>BS Data Science Student • 2-3 hours daily</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span>Target: Professional Data Scientist/Analyst by 2029</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Job Market: Saudi Arabia / Gulf Region</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-section="roadmap">
+                            <i class="fas fa-road"></i> Study Roadmap
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="daily">
+                            <i class="fas fa-calendar-day"></i> Daily Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="teacher">
+                            <i class="fas fa-chalkboard-teacher"></i> AI Teacher Mode
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="progress">
+                            <i class="fas fa-chart-line"></i> Progress Tracking
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="exams">
+                            <i class="fas fa-file-alt"></i> Exams & Assessments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="projects">
+                            <i class="fas fa-project-diagram"></i> Projects & Portfolio
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Progress Overview -->
+                <div class="progress-section">
+                    <div class="progress-title">Overall Progress (2026-2029)</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgress"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--gray);">
+                        <span>Beginner</span>
+                        <span>Intermediate</span>
+                        <span>Professional</span>
+                    </div>
+                    
+                    <div class="skill-level">
+                        <span>Current Level:</span>
+                        <div class="skill-dot filled"></div>
+                        <div class="skill-dot filled"></div>
+                        <div class="skill-dot"></div>
+                        <div class="skill-dot"></div>
+                        <div class="skill-dot"></div>
+                        <strong>Intermediate</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Roadmap Section -->
+                <div class="content-section active" id="roadmap">
+                    <div class="section-header">
+                        <h2><i class="fas fa-road"></i> Complete Study Roadmap (2026-2029)</h2>
+                        <div class="year-filter">
+                            <button class="year-btn active" data-year="all">All Years</button>
+                            <button class="year-btn" data-year="2026">2026</button>
+                            <button class="year-btn" data-year="2027">2027</button>
+                            <button class="year-btn" data-year="2028">2028</button>
+                            <button class="year-btn" data-year="2029">2029</button>
+                        </div>
+                    </div>
+
+                    <div id="roadmapContent">
+                        <!-- Roadmap phases will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Daily Tasks Section -->
+                <div class="content-section" id="daily">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-day"></i> Daily Task Generator</h2>
+                    </div>
+
+                    <div class="task-generator">
+                        <div class="date-selector">
+                            <input type="date" id="taskDate" class="date-input">
+                            <button class="generate-btn" id="generateTask">
+                                <i class="fas fa-bolt"></i> Generate Today's Task
+                            </button>
+                            <button class="generate-btn" id="generateTomorrow">
+                                <i class="fas fa-forward"></i> Tomorrow's Preview
+                            </button>
+                        </div>
+
+                        <div id="dailyTaskContainer">
+                            <!-- Daily task will be generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Teacher Mode -->
+                <div class="content-section" id="teacher">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chalkboard-teacher"></i> AI Teacher Mode</h2>
+                        <button class="generate-btn" id="generatePrompt">
+                            <i class="fas fa-magic"></i> Generate Teaching Prompt
+                        </button>
+                    </div>
+
+                    <div>
+                        <label for="topicSelect">Select Topic for Detailed Teaching:</label>
+                        <select id="topicSelect" class="date-input" style="width: 100%; margin: 15px 0;">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+
+                        <div style="position: relative;">
+                            <div class="prompt-box" id="aiPrompt">
+                                <!-- AI-generated prompt will appear here -->
+                                Select a topic and click "Generate Teaching Prompt"
+                            </div>
+                            <button class="copy-btn" onclick="copyPrompt()">
+                                <i class="fas fa-copy"></i> Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tracking -->
+                <div class="content-section" id="progress">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-line"></i> Progress Tracking</h2>
+                        <button class="generate-btn" id="exportProgress">
+                            <i class="fas fa-download"></i> Export Progress
+                        </button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="streakDays">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="completedTasks">0</div>
+                            <div class="stat-label">Tasks Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="skillsLearned">0</div>
+                            <div class="stat-label">Skills Learned</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="readinessScore">0%</div>
+                            <div class="stat-label">Job Readiness</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 30px 0 15px 0;">Study Calendar</h3>
+                    <div class="calendar" id="studyCalendar">
+                        <!-- Calendar will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Exams & Assessments -->
+                <div class="content-section" id="exams">
+                    <div class="section-header">
+                        <h2><i class="fas fa-file-alt"></i> Exams & Assessments</h2>
+                        <button class="generate-btn" id="takeExam">
+                            <i class="fas fa-play"></i> Take Weekly Test
+                        </button>
+                    </div>
+
+                    <div id="examsContainer">
+                        <!-- Exams will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Projects & Portfolio -->
+                <div class="content-section" id="projects">
+                    <div class="section-header">
+                        <h2><i class="fas fa-project-diagram"></i> Projects & Portfolio</h2>
+                        <button class="generate-btn" id="suggestProject">
+                            <i class="fas fa-lightbulb"></i> Suggest New Project
+                        </button>
+                    </div>
+
+                    <div class="project-grid" id="projectsGrid">
+                        <!-- Projects will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Modal -->
+    <div class="modal" id="examModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h2 id="modalExamTitle"></h2>
+            <div id="modalExamContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================
+        // DATA STORAGE & INITIALIZATION
+        // ====================================
+
+        // Initialize localStorage if empty
+        function initializeStorage() {
+            if (!localStorage.getItem('aiTeacherProgress')) {
+                const initialData = {
+                    streak: 0,
+                    lastStudyDate: new Date().toISOString().split('T')[0],
+                    completedTasks: 0,
+                    skills: {},
+                    studiedDates: {},
+                    projects: [],
+                    exams: {},
+                    currentYear: 2026
+                };
+                localStorage.setItem('aiTeacherProgress', JSON.stringify(initialData));
+            }
+        }
+
+        // Get progress data
+        function getProgressData() {
+            return JSON.parse(localStorage.getItem('aiTeacherProgress'));
+        }
+
+        // Save progress data
+        function saveProgressData(data) {
+            localStorage.setItem('aiTeacherProgress', JSON.stringify(data));
+        }
+
+        // ====================================
+        // ROADMAP DATA (2026-2029)
+        // ====================================
+
+        const roadmapData = {
+            "2026": {
+                title: "🔴 FOUNDATIONS PHASE",
+                description: "Build strong mathematical and programming fundamentals",
+                months: [
+                    "Jan-Mar: Python Programming & Statistics",
+                    "Apr-Jun: Linear Algebra & Calculus",
+                    "Jul-Sep: Probability & Databases",
+                    "Oct-Dec: Data Wrangling & Visualization"
+                ],
+                skills: [
+                    { name: "Python Programming", priority: "critical" },
+                    { name: "Statistics Fundamentals", priority: "critical" },
+                    { name: "Pandas & NumPy", priority: "critical" },
+                    { name: "SQL Databases", priority: "critical" },
+                    { name: "Data Visualization", priority: "important" },
+                    { name: "Git & GitHub", priority: "important" },
+                    { name: "Excel for Analytics", priority: "optional" }
+                ]
+            },
+            "2027": {
+                title: "🟡 CORE JOB SKILLS PHASE",
+                description: "Master essential data science tools and techniques",
+                months: [
+                    "Jan-Mar: Machine Learning Basics",
+                    "Apr-Jun: Advanced Statistics",
+                    "Jul-Sep: Data Mining & Feature Engineering",
+                    "Oct-Dec: Business Intelligence Tools"
+                ],
+                skills: [
+                    { name: "Machine Learning Algorithms", priority: "critical" },
+                    { name: "Scikit-learn", priority: "critical" },
+                    { name: "Feature Engineering", priority: "critical" },
+                    { name: "Power BI / Tableau", priority: "important" },
+                    { name: "Time Series Analysis", priority: "important" },
+                    { name: "A/B Testing", priority: "important" },
+                    { name: "Big Data Basics", priority: "optional" }
+                ]
+            },
+            "2028": {
+                title: "🟢 ADVANCED & PROJECTS PHASE",
+                description: "Deep specialization and real-world projects",
+                months: [
+                    "Jan-Mar: Deep Learning Fundamentals",
+                    "Apr-Jun: Natural Language Processing",
+                    "Jul-Sep: Cloud Platforms (AWS/Azure)",
+                    "Oct-Dec: Advanced ML Projects"
+                ],
+                skills: [
+                    { name: "Deep Learning (TensorFlow/PyTorch)", priority: "critical" },
+                    { name: "NLP & Text Mining", priority: "important" },
+                    { name: "Cloud Computing", priority: "important" },
+                    { name: "MLOps Basics", priority: "important" },
+                    { name: "Ensemble Methods", priority: "optional" },
+                    { name: "Recommendation Systems", priority: "optional" }
+                ]
+            },
+            "2029": {
+                title: "🔵 PROFESSIONAL & PLACEMENT PHASE",
+                description: "Industry readiness and job placement",
+                months: [
+                    "Jan-Mar: Portfolio Development",
+                    "Apr-Jun: Interview Preparation",
+                    "Jul-Sep: Gulf Market Specialization",
+                    "Oct-Dec: Real Industry Projects"
+                ],
+                skills: [
+                    { name: "Portfolio Building", priority: "critical" },
+                    { name: "Interview Skills", priority: "critical" },
+                    { name: "Domain Knowledge (Oil & Gas, Finance)", priority: "important" },
+                    { name: "Communication Skills", priority: "important" },
+                    { name: "Project Management", priority: "optional" },
+                    { name: "Freelancing Basics", priority: "optional" }
+                ]
+            }
+        };
+
+        // ====================================
+        // DAILY TOPICS GENERATOR
+        // ====================================
+
+        const dailyTopics = {
+            "2026": [
+                {
+                    topic: "Python Lists and Dictionaries",
+                    priority: "critical",
+                    time: "2 hours",
+                    goals: ["Master list operations", "Understand dictionary methods"],
+                    practice: ["Create student grade tracker", "Build contact management system"],
+                    project: "Basic Data Structure Project"
+                },
+                {
+                    topic: "Pandas DataFrames",
+                    priority: "critical",
+                    time: "3 hours",
+                    goals: ["Load CSV data", "Filter and sort data", "Basic aggregations"],
+                    practice: ["Analyze sales data", "Clean customer dataset"],
+                    project: "Sales Data Analysis"
+                }
+            ],
+            "2027": [
+                {
+                    topic: "Linear Regression",
+                    priority: "critical",
+                    time: "3 hours",
+                    goals: ["Understand OLS method", "Interpret coefficients", "Evaluate model"],
+                    practice: ["Predict house prices", "Analyze advertising ROI"],
+                    project: "Real Estate Price Predictor"
+                }
+            ]
+        };
+
+        // ====================================
+        // AI TEACHING PROMPT ENGINE
+        // ====================================
+
+        function generateAIPrompt(topic) {
+            const prompts = {
+                "Pandas DataFrames": `ACT as my PERSONAL DATA SCIENCE TEACHER. I'm a Data Science student targeting Gulf jobs.
+
+TOPIC: ${topic}
+
+TEACH ME COMPLETELY:
+
+1. WHAT THIS TOPIC IS:
+- Definition in simple terms
+- Core components
+- How it works fundamentally
+
+2. WHY IT MATTERS IN GULF JOBS:
+- Daily usage in Saudi/Gulf companies
+- Industry applications (Oil & Gas, Banking, Retail)
+- Salary impact for this skill
+
+3. FREQUENCY OF USE:
+- Daily/Weekly/Rare in actual jobs
+- Specific departments that use it
+- Real project examples
+
+4. REQUIRED MASTERY LEVEL:
+- Beginner/Intermediate/Advanced needed
+- Certification recommendations
+- Proficiency indicators
+
+5. STEP-BY-STEP TEACHING PLAN:
+- 1-hour learning plan
+- Key concepts in order
+- Common pitfalls to avoid
+
+6. REAL BUSINESS EXAMPLE:
+- Gulf company case study
+- Problem statement
+- How this topic solved it
+- Business impact (SAR value)
+
+7. DAILY JOB TASKS:
+- Specific tasks using this
+- Tools used with it
+- Team collaboration aspects
+
+8. PRACTICE EXERCISES:
+- 5 hands-on exercises
+- Increasing difficulty
+- With sample datasets
+
+9. MINI PROJECT:
+- Complete project description
+- Dataset to use
+- Expected output
+- How to showcase in portfolio
+
+10. COMMON MISTAKES:
+- What beginners get wrong
+- How to debug
+- Best practices
+
+11. INTERVIEW QUESTIONS:
+- 10 common questions
+- Expected answers
+- How Gulf companies ask these
+
+12. SKILL CONNECTIONS:
+- What to learn before this
+- What to learn after this
+- Complementary skills
+
+13. NEXT LEARNING STEP:
+- Immediate next topic
+- Resources
+- Time estimate
+
+14. COMPLETION CRITERIA:
+- How to know I've mastered it
+- Self-assessment checklist
+- Project completion criteria
+
+PRIORITY: 🔴 CRITICAL / 🟡 IMPORTANT / 🟢 OPTIONAL
+EXPECTED STUDY TIME: 3 hours
+JOB READINESS IMPACT: High
+// Continue with the rest of the prompt...
+                GULF MARKET SPECIFICS:
+                - Saudi Arabian companies' expectations
+                - Required certifications in GCC
+                - Local datasets to practice with
+                - Arabic data handling considerations
+
+                DELIVERABLES FOR TODAY:
+                1. Watch: 30-minute tutorial video
+                2. Read: Documentation key sections
+                3. Code: Complete 3 exercises
+                4. Apply: Mini project implementation
+                5. Review: Common mistakes document
+
+                ASSESSMENT:
+                - Self-test questions (5)
+                - Project review checklist
+                - Peer review criteria
+
+                RESOURCES:
+                - Free resources in Arabic/English
+                - GCC-relevant datasets
+                - Local community groups
+
+                REMEMBER: Focus on practical Gulf applications!`,
+                "Linear Regression": `ACT as my PERSONAL DATA SCIENCE TEACHER for Gulf job market...
+
+                [Similar detailed structure for Linear Regression...]`
+            };
+            return prompts[topic] || `Generate detailed teaching prompt for: ${topic}`;
+        }
+
+        // ====================================
+        // DOM ELEMENTS & EVENT LISTENERS
+        // ====================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStorage();
+            setupNavigation();
+            loadRoadmap();
+            setupDailyTaskGenerator();
+            setupProgressTracking();
+            loadExams();
+            loadProjects();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDate').value = today;
+            
+            // Generate today's task
+            generateDailyTask(today);
+        });
+
+        // Navigation Setup
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Year filter for roadmap
+            document.querySelectorAll('.year-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterRoadmap(this.getAttribute('data-year'));
+                });
+            });
+        }
+
+        // ====================================
+        // ROADMAP FUNCTIONS
+        // ====================================
+
+        function loadRoadmap() {
+            const roadmapContent = document.getElementById('roadmapContent');
+            let html = '';
+            
+            for (const year in roadmapData) {
+                const phase = roadmapData[year];
+                html += `
+                    <div class="roadmap-phase" data-year="${year}">
+                        <div class="phase-header">
+                            <div class="phase-title">${phase.title}</div>
+                            <div class="phase-timeline">${year}</div>
+                        </div>
+                        <p style="margin-bottom: 15px; color: var(--gray);">${phase.description}</p>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong><i class="fas fa-calendar-alt"></i> Monthly Breakdown:</strong>
+                            <ul style="margin: 10px 0 0 20px; color: var(--gray);">
+                                ${phase.months.map(month => `<li>${month}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: 20px 0 10px 0;">
+                            <strong><i class="fas fa-star"></i> Key Skills:</strong>
+                        </div>
+                        <div class="phase-skills">
+                            ${phase.skills.map(skill => `
+                                <div class="skill-tag skill-${skill.priority}">
+                                    ${skill.name}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <button class="generate-btn" style="margin-top: 20px;" onclick="generatePhaseTasks('${year}')">
+                            <i class="fas fa-tasks"></i> Generate Phase Tasks
+                        </button>
+                    </div>
+                `;
+            }
+            
+            roadmapContent.innerHTML = html;
+        }
+
+        function filterRoadmap(year) {
+            const phases = document.querySelectorAll('.roadmap-phase');
+            phases.forEach(phase => {
+                if (year === 'all' || phase.getAttribute('data-year') === year) {
+                    phase.style.display = 'block';
+                } else {
+                    phase.style.display = 'none';
+                }
+            });
+        }
+
+        function generatePhaseTasks(year) {
+            alert(`Generating detailed tasks for ${year} phase...\nCheck Daily Tasks section for detailed schedule.`);
+            // Navigate to daily tasks section
+            document.querySelector('[data-section="daily"]').click();
+        }
+
+        // ====================================
+        // DAILY TASK GENERATOR
+        // ====================================
+
+        function setupDailyTaskGenerator() {
+            document.getElementById('generateTask').addEventListener('click', function() {
+                const date = document.getElementById('taskDate').value;
+                generateDailyTask(date);
+                markStudyDay(date);
+            });
+            
+            document.getElementById('generateTomorrow').addEventListener('click', function() {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                document.getElementById('taskDate').value = tomorrowStr;
+                generateDailyTask(tomorrowStr);
+            });
+        }
+
+        function generateDailyTask(date) {
+            const taskContainer = document.getElementById('dailyTaskContainer');
+            const progressData = getProgressData();
+            const currentYear = progressData.currentYear || 2026;
+            
+            // Get appropriate topic based on year and date
+            const topics = dailyTopics[currentYear] || dailyTopics["2026"];
+            const topic = topics[Math.floor(Math.random() * topics.length)];
+            
+            const taskHtml = `
+                <div class="daily-task">
+                    <div class="task-header">
+                        <div class="task-title">${topic.topic}</div>
+                        <div class="task-priority priority-${topic.priority}">
+                            ${topic.priority.toUpperCase()}
+                        </div>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span><strong>Study Time:</strong> ${topic.time}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span><strong>Date:</strong> ${formatDate(date)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span><strong>Year Phase:</strong> ${currentYear}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-section">
+                        <div class="section-title">
+                            <i class="fas fa-bullseye"></i> Learning Goals
+                        </div>
+                        <div class="section-content">
+                            <ul class="checkbox-list">
+                                ${topic.goals.map(goal => `
+                                    <li>
+                                        <input type="checkbox" id="goal-${goal.substring(0,10)}">
+                                        <label for="goal-${goal.substring(0,10)}">${goal}</label>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="task-section">
+                        <div class="section-title">
+                            <i class="fas fa-dumbbell"></i> Practice Tasks
+                        </div>
+                        <div class="section-content">
+                            <ul class="checkbox-list">
+                                ${topic.practice.map(practice => `
+                                    <li>
+                                        <input type="checkbox" id="practice-${practice.substring(0,10)}">
+                                        <label for="practice-${practice.substring(0,10)}">${practice}</label>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="task-section">
+                        <div class="section-title">
+                            <i class="fas fa-project-diagram"></i> Mini Project
+                        </div>
+                        <div class="section-content">
+                            <p><strong>${topic.project}</strong></p>
+                            <p>Complete this project to reinforce today's learning. Focus on practical implementation.</p>
+                            <button class="generate-btn" style="margin-top: 10px;" onclick="startProject('${topic.project}')">
+                                <i class="fas fa-play"></i> Start Project
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="generate-btn" onclick="markTaskComplete()">
+                            <i class="fas fa-check-circle"></i> Mark Complete
+                        </button>
+                        <button class="generate-btn" style="background: var(--important);" onclick="generateAITeaching('${topic.topic}')">
+                            <i class="fas fa-robot"></i> Get AI Teaching
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            taskContainer.innerHTML = taskHtml;
+        }
+
+        function markTaskComplete() {
+            const progressData = getProgressData();
+            progressData.completedTasks = (progressData.completedTasks || 0) + 1;
+            
+            // Update streak
+            const today = new Date().toISOString().split('T')[0];
+            if (progressData.lastStudyDate) {
+                const lastDate = new Date(progressData.lastStudyDate);
+                const currentDate = new Date(today);
+                const diffTime = Math.abs(currentDate - lastDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    progressData.streak = (progressData.streak || 0) + 1;
+                } else if (diffDays > 1) {
+                    progressData.streak = 1;
+                }
+            }
+            
+            progressData.lastStudyDate = today;
+            progressData.studiedDates = progressData.studiedDates || {};
+            progressData.studiedDates[today] = true;
+            
+            saveProgressData(progressData);
+            updateProgressStats();
+            alert('Task marked as complete! Streak updated.');
+        }
+
+        function markStudyDay(date) {
+            const progressData = getProgressData();
+            progressData.studiedDates = progressData.studiedDates || {};
+            progressData.studiedDates[date] = true;
+            saveProgressData(progressData);
+            updateCalendar();
+        }
+
+        // ====================================
+        // AI TEACHING FUNCTIONS
+        // ====================================
+
+        function setupAITeaching() {
+            // Populate topic select
+            const topicSelect = document.getElementById('topicSelect');
+            let allSkills = [];
+            
+            for (const year in roadmapData) {
+                roadmapData[year].skills.forEach(skill => {
+                    allSkills.push(skill.name);
+                });
+            }
+            
+            // Remove duplicates
+            allSkills = [...new Set(allSkills)];
+            
+            allSkills.forEach(skill => {
+                const option = document.createElement('option');
+                option.value = skill;
+                option.textContent = skill;
+                topicSelect.appendChild(option);
+            });
+            
+            // Generate prompt on button click
+            document.getElementById('generatePrompt').addEventListener('click', function() {
+                const selectedTopic = topicSelect.value;
+                const prompt = generateAIPrompt(selectedTopic);
+                document.getElementById('aiPrompt').textContent = prompt;
+            });
+        }
+
+        function generateAITeaching(topic) {
+            // Navigate to AI teacher section
+            document.querySelector('[data-section="teacher"]').click();
+            
+            // Set the topic in select
+            const topicSelect = document.getElementById('topicSelect');
+            topicSelect.value = topic;
+            
+            // Generate and display prompt
+            const prompt = generateAIPrompt(topic);
+            document.getElementById('aiPrompt').textContent = prompt;
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('aiPrompt').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard! Paste it into DeepSeek.');
+            });
+        }
+
+        // ====================================
+        // PROGRESS TRACKING
+        // ====================================
+
+        function setupProgressTracking() {
+            document.getElementById('exportProgress').addEventListener('click', exportProgress);
+            updateProgressStats();
+            updateCalendar();
+            setupProgressTracking();
+        }
+
+        function updateProgressStats() {
+            const progressData = getProgressData();
+            
+            document.getElementById('streakDays').textContent = progressData.streak || 0;
+            document.getElementById('completedTasks').textContent = progressData.completedTasks || 0;
+            
+            // Calculate skills learned
+            const skillsLearned = Object.keys(progressData.skills || {}).length;
+            document.getElementById('skillsLearned').textContent = skillsLearned;
+            
+            // Calculate job readiness score (simplified)
+            const totalCriticalSkills = 15; // Approximate count
+            const readinessScore = Math.min(100, Math.floor((skillsLearned / totalCriticalSkills) * 100));
+            document.getElementById('readinessScore').textContent = `${readinessScore}%`;
+            
+            // Update overall progress bar
+            const overallProgress = document.getElementById('overallProgress');
+            overallProgress.style.width = `${readinessScore}%`;
+        }
+
+        function updateCalendar() {
+            const calendar = document.getElementById('studyCalendar');
+            const progressData = getProgressData();
+            const studiedDates = progressData.studiedDates || {};
+            
+            // Get current month
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Generate calendar days
+            let calendarHTML = '';
+            
+            // Month header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Get days in month
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isStudied = studiedDates[dateStr];
+                const isToday = dateStr === today.toISOString().split('T')[0];
+                
+                calendarHTML += `
+                    <div class="calendar-day ${isStudied ? 'studied' : ''} ${isToday ? 'current' : ''}">
+                        ${day}
+                        ${isStudied ? '<br><small>✓</small>' : ''}
+                    </div>
+                `;
+            }
+            
+            calendar.innerHTML = calendarHTML;
+        }
+
+        function exportProgress() {
+            const progressData = getProgressData();
+            const dataStr = JSON.stringify(progressData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `ai-teacher-progress-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // ====================================
+        // EXAMS & ASSESSMENTS
+        // ====================================
+
+        function loadExams() {
+            const examsContainer = document.getElementById('examsContainer');
+            const exams = [
+                {
+                    title: "Weekly Statistics Test",
+                    date: "Every Saturday",
+                    duration: "45 minutes",
+                    topics: ["Descriptive Statistics", "Probability", "Hypothesis Testing"],
+                    status: "upcoming"
+                },
+                {
+                    title: "Monthly Python Assessment",
+                    date: "End of Month",
+                    duration: "60 minutes",
+                    topics: ["Pandas", "NumPy", "Data Visualization"],
+                    status: "upcoming"
+                },
+                {
+                    title: "SQL Fundamentals Exam",
+                    date: "Completed",
+                    duration: "50 minutes",
+                    topics: ["SELECT queries", "JOINS", "Aggregations"],
+                    status: "completed"
+                }
+            ];
+            
+            let examsHTML = '';
+            exams.forEach(exam => {
+                examsHTML += `
+                    <div class="exam-card">
+                        <div class="exam-title">
+                            ${exam.title}
+                            <span class="exam-status status-${exam.status}">
+                                ${exam.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <p><i class="fas fa-calendar"></i> <strong>Date:</strong> ${exam.date}</p>
+                        <p><i class="fas fa-clock"></i> <strong>Duration:</strong> ${exam.duration}</p>
+                        <p><i class="fas fa-book"></i> <strong>Topics:</strong> ${exam.topics.join(', ')}</p>
+                        <button class="generate-btn" style="margin-top: 15px;" onclick="startExam('${exam.title}')">
+                            <i class="fas fa-play"></i> Start Exam
+                        </button>
+                    </div>
+                `;
+            });
+            
+            examsContainer.innerHTML = examsHTML;
+            
+            // Setup exam button
+            document.getElementById('takeExam').addEventListener('click', function() {
+                startExam("Weekly Statistics Test");
+            });
+        }
+
+        function startExam(examTitle) {
+            const modal = document.getElementById('examModal');
+            const title = document.getElementById('modalExamTitle');
+            const content = document.getElementById('modalExamContent');
+            
+            title.textContent = examTitle;
+            
+            // Generate exam questions
+            const questions = {
+                "Weekly Statistics Test": `
+                    <h3>Weekly Statistics Exam</h3>
+                    <p>Time: 45 minutes | Questions: 10</p>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4>Question 1:</h4>
+                        <p>What is the difference between mean and median? When would you use each?</p>
+                        <textarea style="width: 100%; height: 80px; margin: 10px 0; padding: 10px;" placeholder="Your answer..."></textarea>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4>Question 2:</h4>
+                        <p>Explain p-value in hypothesis testing with a Gulf business example.</p>
+                        <textarea style="width: 100%; height: 80px; margin: 10px 0; padding: 10px;" placeholder="Your answer..."></textarea>
+                    </div>
+                    
+                    <button class="generate-btn" style="width: 100%;" onclick="submitExam()">
+                        <i class="fas fa-paper-plane"></i> Submit Exam
+                    </button>
+                `,
+                "Monthly Python Assessment": `
+                    <h3>Monthly Python Assessment</h3>
+                    <p>Time: 60 minutes | Questions: 15</p>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4>Question 1:</h4>
+                        <p>Write a Python function to clean a dataset with missing values.</p>
+                        <textarea style="width: 100%; height: 120px; margin: 10px 0; padding: 10px; font-family: monospace;" placeholder="Your code..."></textarea>
+                    </div>
+                    
+                    <button class="generate-btn" style="width: 100%;" onclick="submitExam()">
+                        <i class="fas fa-paper-plane"></i> Submit Exam
+                    </button>
+                `
+            };
+            
+            content.innerHTML = questions[examTitle] || `<p>Exam content for ${examTitle}</p>`;
+            modal.classList.add('active');
+        }
+
+        function submitExam() {
+            alert('Exam submitted! Your results will be saved.');
+            closeModal();
+            
+            // Update progress
+            const progressData = getProgressData();
+            progressData.exams = progressData.exams || {};
+            progressData.exams[new Date().toISOString().split('T')[0]] = "completed";
+            saveProgressData(progressData);
+        }
+
+        function closeModal() {
+            document.getElementById('examModal').classList.remove('active');
+        }
+
+        // ====================================
+        // PROJECTS & PORTFOLIO
+        // ====================================
+
+        function loadProjects() {
+            const projectsGrid = document.getElementById('projectsGrid');
+            const projects = [
+                {
+                    title: "Saudi Retail Sales Analysis",
+                    difficulty: "beginner",
+                    skills: ["Pandas", "Matplotlib", "Data Cleaning"],
+                    description: "Analyze retail sales data from a Saudi company",
+                    duration: "2 weeks"
+                },
+                {
+                    title: "Gulf Stock Market Predictor",
+                    difficulty: "intermediate",
+                    skills: ["Time Series", "Linear Regression", "Feature Engineering"],
+                    description: "Predict stock trends in Gulf markets",
+                    duration: "4 weeks"
+                },
+                {
+                    title: "Arabic Sentiment Analysis",
+                    difficulty: "intermediate",
+                    skills: ["NLP", "Text Mining", "Classification"],
+                    description: "Analyze sentiment in Arabic social media posts",
+                    duration: "3 weeks"
+                },
+                {
+                    title: "Oil & Gas Production Optimizer",
+                    difficulty: "advanced",
+                    skills: ["Machine Learning", "Optimization", "Domain Knowledge"],
+                    description: "Optimize production for Gulf oil companies",
+                    duration: "6 weeks"
+                }
+            ];
+            
+            let projectsHTML = '';
+            projects.forEach(project => {
+                projectsHTML += `
+                    <div class="project-card">
+                        <div class="project-difficulty difficulty-${project.difficulty}">
+                            ${project.difficulty.toUpperCase()}
+                        </div>
+                        <h3 style="margin-bottom: 10px;">${project.title}</h3>
+                        <p style="color: var(--gray); margin-bottom: 15px;">${project.description}</p>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong><i class="fas fa-tools"></i> Skills Required:</strong>
+                            <div class="phase-skills" style="margin-top: 8px;">
+                                ${project.skills.map(skill => `
+                                    <div class="skill-tag" style="font-size: 0.8rem;">${skill}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <p><i class="fas fa-clock"></i> <strong>Duration:</strong> ${project.duration}</p>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="generate-btn" onclick="startProject('${project.title}')">
+                                <i class="fas fa-play"></i> Start Project
+                            </button>
+                            <button class="generate-btn" style="background: var(--important);" onclick="addToPortfolio('${project.title}')">
+                                <i class="fas fa-plus"></i> Add to Portfolio
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            projectsGrid.innerHTML = projectsHTML;
+            
+            // Setup project suggestion button
+            document.getElementById('suggestProject').addEventListener('click', suggestNewProject);
+        }
+
+        function startProject(projectTitle) {
+            alert(`Starting project: ${projectTitle}\n\nChecklist:\n1. Define project scope\n2. Gather data\n3. Set up environment\n4. Implement solution\n5. Create documentation\n6. Prepare presentation`);
+            
+            // Navigate to progress tracking
+            document.querySelector('[data-section="progress"]').click();
+        }
+
+        function addToPortfolio(projectTitle) {
+            const progressData = getProgressData();
+            progressData.projects = progressData.projects || [];
+            
+            if (!progressData.projects.includes(projectTitle)) {
+                progressData.projects.push(projectTitle);
+                saveProgressData(progressData);
+                alert(`${projectTitle} added to your portfolio!`);
+            } else {
+                alert('Project already in portfolio.');
+            }
+        }
+
+        function suggestNewProject() {
+            const projectIdeas = [
+                "Dubai Tourism Analytics Dashboard",
+                "Saudi E-commerce Customer Segmentation",
+                "Gulf Bank Fraud Detection System",
+                "Qatar Real Estate Price Analysis",
+                "UAE Telecom Churn Prediction",
+                "KSA Healthcare Patient Analysis"
+            ];
+            
+            const randomIdea = projectIdeas[Math.floor(Math.random() * projectIdeas.length)];
+            
+            const modal = document.getElementById('examModal');
+            const title = document.getElementById('modalExamTitle');
+            const content = document.getElementById('modalExamContent');
+            
+            title.textContent = "New Project Suggestion";
+            content.innerHTML = `
+                <h3>${randomIdea}</h3>
+                <p style="margin: 20px 0; color: var(--gray);">A Gulf-relevant project to enhance your portfolio</p>
+                
+                <div style="background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4><i class="fas fa-lightbulb"></i> Project Overview</h4>
+                    <p>Build a comprehensive data analysis project focusing on Gulf market applications.</p>
+                    
+                    <h4 style="margin-top: 15px;"><i class="fas fa-tasks"></i> Key Requirements:</h4>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Use real or simulated Gulf market data</li>
+                        <li>Implement at least 3 data analysis techniques</li>
+                        <li>Create interactive visualizations</li>
+                        <li>Write professional documentation</li>
+                        <li>Prepare business recommendations</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 15px;"><i class="fas fa-calendar"></i> Timeline:</h4>
+                    <p>2-4 weeks (adjust based on complexity)</p>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="generate-btn" onclick="startProject('${randomIdea}')">
+                        <i class="fas fa-play"></i> Start This Project
+                    </button>
+                    <button class="generate-btn" style="background: var(--important);" onclick="suggestNewProject()">
+                        <i class="fas fa-redo"></i> Another Idea
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // ====================================
+        // HELPER FUNCTIONS
+        // ====================================
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        function updateCurrentYear() {
+            const progressData = getProgressData();
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            
+            if (currentYear > progressData.currentYear && currentYear <= 2029) {
+                progressData.currentYear = currentYear;
+                saveProgressData(progressData);
+            }
+        }
+
+        // Auto-update year every day
+        setInterval(updateCurrentYear, 86400000); // 24 hours
+
+        // Initialize AI Teaching setup
+        setupAITeaching();
+
+        // ====================================
+        // ADDITIONAL FEATURES
+        // ====================================
+
+        // Job Market Insights (Gulf Specific)
+        function loadGulfInsights() {
+            // This would typically fetch from a local JSON file
+            const insights = {
+                "Saudi Arabia": {
+                    "inDemand": ["Machine Learning Engineers", "Business Intelligence Analysts", "Data Scientists"],
+                    "averageSalary": "SAR 25,000 - 40,000",
+                    "topCompanies": ["Aramco", "SABIC", "STC", "Al Rajhi Bank"],
+                    "requiredCertifications": ["SAS Certified", "Microsoft Data Analyst", "AWS Certified"]
+                },
+                "UAE": {
+                    "inDemand": ["AI Specialists", "Data Engineers", "Analytics Managers"],
+                    "averageSalary": "AED 30,000 - 50,000",
+                    "topCompanies": ["Emirates", "Etisalat", "ADNOC", "Mubadala"],
+                    "requiredCertifications": ["Tableau Certified", "Google Data Analytics", "Python Institute Certifications"]
+                }
+            };
+            
+            // Can be extended to show in a separate section
+            return insights;
+        }
+
+        // Interview Preparation
+        function generateInterviewQuestions(skill) {
+            const questions = {
+                "Python": [
+                    "Explain list comprehension with a Gulf business example",
+                    "How would you handle large datasets in Python for a Saudi bank?",
+                    "What are decorators and where would you use them?"
+                ],
+                "Machine Learning": [
+                    "Explain bias-variance tradeoff to a non-technical manager",
+                    "How would you validate a model for GCC customer data?",
+                    "What metrics would you use for an imbalanced dataset?"
+                ]
+            };
+            
+            return questions[skill] || ["Standard interview questions for this skill"];
+        }
+
+        // Skill Assessment
+        function assessSkillLevel(skill) {
+            const progressData = getProgressData();
+            const skillData = progressData.skills[skill] || { level: 0, lastPracticed: null };
+            
+            if (skillData.level < 3) return "Beginner";
+            if (skillData.level < 7) return "Intermediate";
+            return "Advanced";
+        }
+
+        // Resource Recommendations
+        function getResources(topic) {
+            const resources = {
+                "Python": [
+                    "Python for Data Analysis (Wes McKinney)",
+                    "Real Python Tutorials",
+                    "Kaggle Python Courses"
+                ],
+                "Statistics": [
+                    "Statistics for Business and Economics",
+                    "Khan Academy Statistics",
+                    "GCC Case Studies in Statistics"
+                ]
+            };
+            
+            return resources[topic] || ["General learning resources"];
+        }
+
+        // ====================================
+        // COMPREHENSIVE ROADMAP DETAILS
+        // ====================================
+
+        // Detailed monthly breakdown (simplified for display)
+        const detailedRoadmap = {
+            "2026": {
+                "Q1": ["Python Basics", "Statistics Fundamentals", "Git & GitHub"],
+                "Q2": ["Pandas Mastery", "Data Visualization", "SQL Fundamentals"],
+                "Q3": ["Probability Theory", "Data Wrangling", "Exploratory Data Analysis"],
+                "Q4": ["Matplotlib/Seaborn", "Basic Machine Learning", "Portfolio Project 1"]
+            },
+            "2027": {
+                "Q1": ["Linear Regression", "Logistic Regression", "Model Evaluation"],
+                "Q2": ["Decision Trees", "Ensemble Methods", "Feature Engineering"],
+                "Q3": ["Time Series Analysis", "Clustering", "Dimensionality Reduction"],
+                "Q4": ["Advanced SQL", "Business Intelligence Tools", "Portfolio Project 2"]
+            },
+            "2028": {
+                "Q1": ["Deep Learning Basics", "Neural Networks", "TensorFlow/PyTorch"],
+                "Q2": ["Natural Language Processing", "Computer Vision Basics", "Cloud Platforms"],
+                "Q3": ["MLOps Introduction", "Model Deployment", "API Development"],
+                "Q4": ["Advanced Projects", "Research Paper Review", "Portfolio Project 3"]
+            },
+            "2029": {
+                "Q1": ["Interview Preparation", "Resume Building", "Portfolio Polish"],
+                "Q2": ["Gulf Market Research", "Domain Specialization", "Networking"],
+                "Q3": ["Real Industry Projects", "Freelance Work", "Certifications"],
+                "Q4": ["Job Applications", "Interview Practice", "Career Launch"]
+            }
+        };
+
+        // Function to get detailed roadmap view
+        function getDetailedRoadmap(year, quarter) {
+            return detailedRoadmap[year]?.[quarter] || [];
+        }
+
+        // ====================================
+        // LOCAL STORAGE BACKUP & RECOVERY
+        // ====================================
+
+        function backupData() {
+            const data = localStorage.getItem('aiTeacherProgress');
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai-teacher-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function restoreData(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = JSON.parse(e.target.result);
+                localStorage.setItem('aiTeacherProgress', JSON.stringify(data));
+                alert('Data restored successfully! Please refresh the page.');
+                location.reload();
+            };
+            reader.readAsText(file);
+        }
+
+        // Auto-backup every week
+        setInterval(backupData, 7 * 24 * 60 * 60 * 1000);
+
+        // ====================================
+        // FINAL INITIALIZATION
+        // ====================================
+
+        console.log("AI Personal Data Science Teacher System Initialized");
+        console.log("System Status: Active (2026-2029 Roadmap)");
+        console.log("Local Storage: Configured");
+        console.log("Gulf Market Focus: Enabled");
+        console.log("Daily Task Generator: Ready");
+        console.log("Progress Tracking: Active");
+
+        // Display welcome message
+        setTimeout(() => {
+            const today = new Date();
+            const welcomeMessages = [
+                `Welcome to your AI Data Science Teacher! Ready to become a Gulf market professional by 2029?`,
+                `Today is ${formatDate(today.toISOString().split('T')[0])}. Let's make progress!`,
+                `Remember: Consistent 2-3 hours daily study will make you job-ready by 2029.`,
+                `Gulf companies are hiring skilled data professionals. Your journey starts here!`
+            ];
+            
+            const randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+            console.log(`📚 ${randomMessage}`);
+        }, 1000);
+
+    </script>
+</body>
+</html>
